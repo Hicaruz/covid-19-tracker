@@ -6,7 +6,7 @@ class Card extends Component{
         return(
             <div className="card text-white bg-dark mb-3" >
             <div className="card-body">
-              <h5 className="card-title">{this.country}</h5>
+              <h5 className="card-title">{this.props.country}</h5>
               <p className="card-text"><span className="badge badge-warning">Cconfirmed</span>  : {this.props.confirmed}</p>
               <p className="card-text"><span className="badge badge-danger">Deaths</span> : {this.props.deaths}</p>
               <p className="card-text"><span className="badge badge-success">Recovered</span> : {this.props.recovered}</p>
