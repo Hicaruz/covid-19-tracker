@@ -11,7 +11,8 @@ class App extends Component {
       confirmed: 0,
       deaths: 0,
       recovered: 0,
-      query: ""
+      query: "",
+      sort: "deaths"
     }
   }
   componentWillMount() {
@@ -32,7 +33,7 @@ class App extends Component {
     const countries = await res.json()
     for (const country of countries) {
       this.setState({
-        locations: [...this.state.locations, country].sort((a, b) => b.deaths - a.deaths),
+        locations: [...this.state.locations, country].sort((a, b) => b[this.state.sort] - a[this.state.sort]),
         confirmed: this.state.confirmed + country.confirmed,
         deaths: this.state.deaths + country.deaths,
         recovered: this.state.recovered + country.recovered,
