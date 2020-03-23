@@ -39,7 +39,6 @@ class App extends Component {
       })
     }
     const current = (this.state.locations.filter(location => location.country === this.state.location.country)).shift()
-    console.log(current)
     this.setState({ current })
   }
 
@@ -58,21 +57,25 @@ class App extends Component {
         <body className="text-center">
           <div className="App-header">
             <div className="row">
-              <div className="card mb-3 main">
-                <div className="row no-gutters">
-                  <div className="col-12">
-                    <div className="card-body">
-                      <h5 className="card-title">{this.state.location.country}</h5>
-                      <p className="card-text"><span class="badge badge-warning">Cconfirmed</span>  : {this.state.current.confirmed || 0}</p>
-                      <p className="card-text"><span class="badge badge-danger">Deaths</span> : {this.state.current.deaths || 0}</p>
-                      <p className="card-text"><span class="badge badge-success">Recovered</span> : {this.state.current.recovered || 0}</p>
-                    </div>
-                    <div className="card-footer">
-                      <small>last update: {(new Date(this.state.current.date)).toString().slice(0, 15)}</small>
+              {
+                this.state.current ?
+                  <div className="card mb-3 main">
+                    <div className="row no-gutters">
+                      <div className="col-12">
+                        <div className="card-body">
+                          <h5 className="card-title">{this.state.location.country}</h5>
+                          <p className="card-text"><span className="badge badge-warning">Cconfirmed</span>  : {this.state.current.confirmed || 0}</p>
+                          <p className="card-text"><span className="badge badge-danger">Deaths</span> : {this.state.current.deaths || 0}</p>
+                          <p className="card-text"><span className="badge badge-success">Recovered</span> : {this.state.current.recovered || 0}</p>
+                        </div>
+                        <div className="card-footer">
+                          <small>last update: {(new Date(this.state.current.date)).toString().slice(0, 15)}</small>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                  : null
+              }
             </div>
             <input type="text" placeholder="Search a country..." onChange={this.queryOnChange.bind(this)}></input>
             <div className="row list">
@@ -86,9 +89,9 @@ class App extends Component {
                       <div className="card text-white bg-dark mb-3" key={key}>
                         <div className="card-body">
                           <h5 className="card-title">{location.country}</h5>
-                          <p className="card-text"><span class="badge badge-warning">Cconfirmed</span>  : {location.confirmed}</p>
-                          <p className="card-text"><span class="badge badge-danger">Deaths</span> : {location.deaths}</p>
-                          <p className="card-text"><span class="badge badge-success">Recovered</span> : {location.recovered}</p>
+                          <p className="card-text"><span className="badge badge-warning">Cconfirmed</span>  : {location.confirmed}</p>
+                          <p className="card-text"><span className="badge badge-danger">Deaths</span> : {location.deaths}</p>
+                          <p className="card-text"><span className="badge badge-success">Recovered</span> : {location.recovered}</p>
                         </div>
                         <div className="card-footer">
                           <small style={{ fontSize: "20px" }}>last update : {(new Date(location.date)).toString().slice(0, 15)}</small>
