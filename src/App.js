@@ -15,7 +15,7 @@ class App extends Component {
       sort: "deaths"
     }
   }
-  componentWillMount() {
+  async componentWillMount() {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { latitude, longitude } = coords
       const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude)
@@ -27,8 +27,6 @@ class App extends Component {
         }
       })
     });
-  }
-  async componentDidMount() {
     const res = await fetch("https://covid-19api.com/api/countries-latest", { mode: 'cors' })
     const countries = await res.json()
     for (const country of countries) {
@@ -40,6 +38,7 @@ class App extends Component {
       })
     }
   }
+
   queryOnChange({ target }) {
     this.setState({ query: target.value })
   }
