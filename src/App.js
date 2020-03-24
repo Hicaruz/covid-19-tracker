@@ -97,15 +97,19 @@ class App extends Component {
                       this.state.locations
                         .filter(location => this.checkInput(location))
                         .map((location, key) => {
-                          return location.country !== this.state.current.country ?
-                            <Card
+                          if (location.country !== this.state.current.country) {
+                            this.setState({ current: { ...location, ...this.state.current } })
+                            return null
+                          } else {
+                            return (<Card
                               key={key}
                               country={location.country}
                               confirmed={location.confirmed}
                               deaths={location.deaths}
                               recovered={location.recovered}
                               date={location.date}
-                            /> : null
+                            />)
+                          }
 
                         }) :
                       <div className="d-flex justify-content-center App-header" style={{ marginLeft: "40%" }}>
@@ -126,4 +130,3 @@ class App extends Component {
 }
 
 export default App;
-  
