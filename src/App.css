@@ -47,3 +47,22 @@
 .card {
   margin: 10px 0 10px;
 }
+.btn {
+  height: 50px;
+  width: 100px;
+  margin: 20px 0 0;
+}
+@media only screen and (min-width: 600px) {
+  .option {
+    margin: 20px 20px 0;
+    display: inline-block;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+  }
+}
+
+.text-black{
+  color: black;
+}
