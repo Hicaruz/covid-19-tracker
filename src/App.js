@@ -2,27 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import crg from 'country-reverse-geocoding'
-import Card from './Card'
-
-const Main = ({ country, confirmed, deaths, recovered, date }) => {
-  return (
-    <div className="card mb-3 main">
-      <div className="row no-gutters">
-        <div className="col-12">
-          <div className="card-body">
-            <h5 className="card-title">{country}</h5>
-            <p className="card-text"><span className="badge badge-warning">Cconfirmed</span>  : {confirmed || 0}</p>
-            <p className="card-text"><span className="badge badge-danger">Deaths</span> : {deaths || 0}</p>
-            <p className="card-text"><span className="badge badge-success">Recovered</span> : {recovered || 0}</p>
-          </div>
-          <div className="card-footer">
-            <small>last update: {(new Date(date)).toString().slice(0, 15)}</small>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
+import { Card, Main } from './layout'
 
 class App extends Component {
   constructor() {
@@ -36,9 +16,6 @@ class App extends Component {
       query: "",
       sort: "deaths"
     }
-  }
-  setup() {
-
   }
 
   async componentWillMount() {
@@ -98,7 +75,7 @@ class App extends Component {
                 {
                   this.state.current.country ?
                     <Main
-                      className="col col-12 "
+                      className="col col-12"
                       country={this.state.current.country}
                       confirmed={this.state.current.confirmed}
                       deaths={this.state.current.deaths}
@@ -121,7 +98,8 @@ class App extends Component {
                         .filter(location => this.checkInput(location))
                         .map((location, key) => {
                           return location.country !== this.state.current.country ?
-                            <Card key={key}
+                            <Card
+                              key={key}
                               country={location.country}
                               confirmed={location.confirmed}
                               deaths={location.deaths}
@@ -148,3 +126,4 @@ class App extends Component {
 }
 
 export default App;
+  
