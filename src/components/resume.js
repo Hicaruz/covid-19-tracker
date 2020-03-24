@@ -94,6 +94,7 @@ class Resume extends Component {
                         <Card
                           size={filtered.length}
                           key={key}
+                          flag={location.country_code}
                           bg={location.country !== (current ? current.country : "") ? "bg-dark" : "bg-light"}
                           text={location.country !== (current ? current.country : "") ? "white" : "black"}
                           country={location.country}
