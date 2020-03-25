@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import Header from './header'
 import '../App.css';
 import crg from 'country-reverse-geocoding'
 import { Card } from './layout'
@@ -69,15 +69,7 @@ class Resume extends Component {
     return (
       <>
         <div className="App-header">
-          <header className="App-header">
-
-            <br />
-            <img src={logo} className="App-logo" alt="logo" />
-            <br />
-            <h3>Covid-19 <em>  Tracker</em></h3>
-            <h4>#StayAtHome</h4>
-            <br />
-          </header>
+        <Header/>
           <div className="text-center">
             <div className="container-xl">
               <input

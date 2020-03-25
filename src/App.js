@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Resume, About, Timeline } from './components'
+import { Resume, About, Timeline, Map } from './components'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
               <Link to="/about"><button type="button" className="btn btn-info option">About</button></Link>
           </nav>
           <Route path="/" exact component={Resume} />
-          <Route path="/contact" component={Resume} />
+          <Route path="/map" component={Map} />
           <Route path="/timeline" component={Timeline} />
           <Route path="/about" component={About} />
 

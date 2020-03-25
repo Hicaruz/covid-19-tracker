@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, PieChart, Pie, Cell } from 'recharts'
+import crg from 'country-reverse-geocoding'
+import Header from './header'
+
 class Timeline extends Component {
     constructor() {
         super();
         this.state = {
-            option: "Guatemala",
+            option: "Italy",
             current: [],
             data: [],
             locations: [],
@@ -17,7 +20,11 @@ class Timeline extends Component {
 
     }
     async componentDidMount() {
-
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+            const { latitude, longitude } = coords;
+            const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
+            this.setState({ option: country });
+        });
         const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
         const format = await res.json()
         const countries = format.locations
@@ -48,13 +55,39 @@ class Timeline extends Component {
     render() {
         const current = this.state.data.filter(l => l.country === this.state.option)
         const format = current.filter(({ confirmed, deaths, recovered }) => confirmed + deaths + recovered > 0)
+        const keys = ["deaths", "recovered", "confirmed"]
+        const totals = []
+        for (const key of keys) {
+            let value = [...format].pop()
+            totals.push({
+                name: key, 
+                value: value ? value[key] :  0
+            })
+        }
+        console.log(totals)
+        const COLORS = ['#dc3545', '#28a745', '#ffc107'];
+        const RADIAN = Math.PI / 180;
+        const renderCustomizedLabel = ({
+            cx, cy, midAngle, innerRadius, outerRadius, percent, index,
+        }) => {
+            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+            const x = cx + radius * Math.cos(-midAngle * RADIAN);
+            const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+            return (
+                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                    {`${(percent * 100).toFixed(0)}%`}
+                </text>
+            );
+        };
         return (
             <div className="container">
                 <div className="d-flex justify-content-center App-header">
-
+                    <Header />
                     <select value={this.state.option} onChange={this.handleChange.bind(this)} className="btn btn-light dropdown-toggle" style={{ width: "200px" }}>
                         {
                             [...new Set(this.state.data.map(l => l.country))]
+                                .sort()
                                 .map((country, key) => {
                                     return (
                                         <option value={country} key={key}>{country}</option>
@@ -63,7 +96,7 @@ class Timeline extends Component {
                         }
                     </select>
                     <br /><br />
-                    <div style={{ fontSize: "18px", backgroundColor: "##282c34" }}>
+                    <div style={{ fontSize: "18px", backgroundColor: "#0282c34" }}>
                         {
                             this.state.data.length ?
                                 <div>
@@ -77,13 +110,32 @@ class Timeline extends Component {
                                         <XAxis dataKey="date" stroke="#FFF" />
                                         <Tooltip labelStyle={{ color: "#000" }} />
                                         <Legend />
-                                        <ReferenceLine x="deaths" stroke="red" label="Max deaths" />
-                                        <ReferenceLine y={format.reduce((p, c) => p.confirmed > c.confirmed ? p.confirmed : c.confirmed, { confirmed: 0 })} label="Max confirmed" stroke="red" />
+                                        <ReferenceLine x="deaths" stroke="red" />
+                                        <ReferenceLine y={format.reduce((p, c) => p.confirmed > c.confirmed ? p.confirmed : c.confirmed, { confirmed: 0 })} stroke="red" style={{ color: "#FFF" }} />
                                         <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
                                         <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
-                                        <Area type="monotone" dataKey="recovered" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
-
+                                        <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
                                     </ComposedChart>
+                                    <PieChart width={window.screen.width} height={250}>
+                                        <Pie
+                                            data={totals}
+                                            paddingAngle={5}
+                                            cx={window.screen.width / 2.4}
+                                            cy={100}
+                                            label={renderCustomizedLabel}
+
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            stroke="#282c34"
+                                            dataKey="value"
+                                        >
+                                            {
+                                                totals.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+
+                                            }
+                                        </Pie>
+                                    </PieChart>
+
                                 </div>
                                 :
                                 <div className="d-flex justify-content-center">

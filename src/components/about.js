@@ -14,7 +14,7 @@ class About extends Component {
                         <h3>Covid-19 <em>  Tracker</em></h3>
                         <h4>#StayAtHome</h4>
                         <br />
-                        <h1> <span role="img" aria-label="Fire">🔥 </span> <em>Juan Pablo De La Cerda Castillo</em> <span role="img" aria-label="Fire"> 🔥 </span>  </h1>
+                        <h2><span role="img" aria-label="Fire"> 🔥 </span><em>Juan Pablo Castillo</em> <span role="img" aria-label="Fire"> 🔥 </span>  </h2>
                     </header>
                 </div>
             </div>

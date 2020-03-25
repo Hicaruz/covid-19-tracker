@@ -66,3 +66,7 @@
 .text-black{
   color: black;
 }
+img{
+  position: relative;
+  bottom: 2.5px
+}
