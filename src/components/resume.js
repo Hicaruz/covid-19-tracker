@@ -65,7 +65,7 @@ class Resume extends Component {
   render() {
     const filtered = this.state.locations.filter(location => this.checkInput(location))
     const current = this.state.locations.filter(location => location.country === this.state.current.country).shift()
-    const data = [current, ...filtered]
+    const data = !this.state.query ? [current, ...filtered] : filtered
     return (
       <>
         <div className="App-header">
