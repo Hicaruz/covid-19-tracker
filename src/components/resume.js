@@ -29,7 +29,7 @@ class Resume extends Component {
         }
       });
     });
-    const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations", { mode: 'cors' })
+    const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
     const data = await res.json()
     const countries = data.locations
     let initialStare = {
@@ -85,7 +85,7 @@ class Resume extends Component {
                 onChange={this.queryOnChange.bind(this)}>
               </input>
               <br />
-
+              <br />
               <div className="container" >
                 <div className="row list">
                   {
