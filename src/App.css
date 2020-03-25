@@ -3,7 +3,8 @@
 }
 
 .App-logo {
-  height: 20vmin;
+  height: 15vmin;
+  margin: 10px 0 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -18,7 +19,7 @@
   justify-content: center;
 }
 .App-header {
-  min-height: 30vh;
+  min-height: 20vh;
   display: flex;
   flex-direction: column;
   align-items: center;

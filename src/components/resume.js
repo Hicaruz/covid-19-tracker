@@ -72,11 +72,11 @@ class Resume extends Component {
         <Header/>
           <div className="text-center">
             <div className="container-xl">
+            <br />
               <input
                 type="text" placeholder="Search a country..."
                 onChange={this.queryOnChange.bind(this)}>
               </input>
-              <br />
               <br />
               <div className="container" >
                 <div className="row list">
