@@ -60,8 +60,8 @@ class Timeline extends Component {
         for (const key of keys) {
             let value = [...format].pop()
             totals.push({
-                name: key, 
-                value: value ? value[key] :  0
+                name: key,
+                value: value ? value[key] : 0
             })
         }
         console.log(totals)
@@ -124,16 +124,12 @@ class Timeline extends Component {
                                             cx={window.screen.width / 2.4}
                                             cy={100}
                                             label={renderCustomizedLabel}
-
                                             innerRadius={60}
                                             outerRadius={80}
                                             stroke="#282c34"
                                             dataKey="value"
                                         >
-                                            {
-                                                totals.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-
-                                            }
+                                            {totals.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                         </Pie>
                                     </PieChart>
 
