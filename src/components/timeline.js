@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LineChart, XAxis, YAxis, Tooltip, Line } from 'recharts'
+import { LineChart, XAxis, YAxis, Tooltip, Line, RadarChart, Radar, Legend, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts'
 class Timeline extends Component {
     constructor() {
         super();
@@ -48,7 +48,7 @@ class Timeline extends Component {
     render() {
         const current = this.state.data.filter(l => l.country === this.state.option)
         return (
-            <div className="container"  >
+            <div className="container">
                 <div className="d-flex justify-content-center App-header">
 
                     <select value={this.state.option} onChange={this.handleChange.bind(this)} className="btn btn-light dropdown-toggle" style={{ width: "200px" }}>
@@ -65,20 +65,30 @@ class Timeline extends Component {
                     <div style={{ fontSize: "18px", backgroundColor: "##282c34" }}>
                         {
                             this.state.data.length ?
-                                <LineChart
-                                    width={window.screen.width - 400}
-                                    height={600}
-                                    data={current.slice(0, current.length / 2)}
-                                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                                    <YAxis stroke="#FFF" />
-                                    <XAxis dataKey="date" stroke="#FFF" />
-                                    
-                                    <Tooltip  />
-                                    <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="url(#colorUv)" />
-                                    <Line type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="url(#colorPv)" />
-                                    <Line type="monotone" dataKey="recovered" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
+                                <div>
+                                    <LineChart
+                                        width={window.screen.width}
+                                        height={400}
+                                        data={current.slice(0, current.length / 2)}
+                                        margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
+                                        <YAxis stroke="#FFF" />
+                                        <XAxis dataKey="date" stroke="#FFF" />
 
-                                </LineChart>
+                                        <Tooltip />
+                                        <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="url(#colorUv)" />
+                                        <Line type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="url(#colorPv)" />
+                                        <Line type="monotone" dataKey="recovered" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
+
+                                    </LineChart>
+                                    <RadarChart outerRadius={90} width={730} height={250} data={current}>
+                                        <PolarGrid />
+                                        <PolarAngleAxis dataKey="subject" />
+                                        <PolarRadiusAxis angle={30} domain={[0, 150]} />
+                                        <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                                        <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+                                        <Legend />
+                                    </RadarChart>
+                                </div>
                                 :
                                 <div className="d-flex justify-content-center">
                                     <div className="spinner-border" role="status">
