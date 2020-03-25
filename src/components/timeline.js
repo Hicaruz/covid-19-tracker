@@ -86,6 +86,7 @@ class Timeline extends Component {
                     <Header />
                     <select value={this.state.option} onChange={this.handleChange.bind(this)} className="btn btn-light dropdown-toggle" style={{ width: "200px" }}>
                         {
+                            //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
                             [...new Set(this.state.data.map(l => l.country))]
                                 .sort()
                                 .map((country, key) => {
