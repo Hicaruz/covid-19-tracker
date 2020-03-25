@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { LineChart, XAxis, YAxis, Tooltip, Line, RadarChart, Radar, Legend, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar } from 'recharts'
 class Timeline extends Component {
     constructor() {
         super();
@@ -47,6 +47,7 @@ class Timeline extends Component {
     }
     render() {
         const current = this.state.data.filter(l => l.country === this.state.option)
+        const format = current.filter(({ confirmed, deaths, recovered }) => confirmed + deaths + recovered > 0)
         return (
             <div className="container">
                 <div className="d-flex justify-content-center App-header">
@@ -66,28 +67,23 @@ class Timeline extends Component {
                         {
                             this.state.data.length ?
                                 <div>
-                                    <LineChart
+                                    <ComposedChart
                                         width={window.screen.width}
-                                        height={400}
-                                        data={current.slice(0, current.length / 2)}
+                                        height={300}
+                                        data={format.slice(0, format.length / 2)}
                                         margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                                         <YAxis stroke="#FFF" />
+                                        <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
                                         <XAxis dataKey="date" stroke="#FFF" />
-
-                                        <Tooltip />
-                                        <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="url(#colorUv)" />
-                                        <Line type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="url(#colorPv)" />
-                                        <Line type="monotone" dataKey="recovered" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
-
-                                    </LineChart>
-                                    <RadarChart outerRadius={90} width={730} height={250} data={current}>
-                                        <PolarGrid />
-                                        <PolarAngleAxis dataKey="subject" />
-                                        <PolarRadiusAxis angle={30} domain={[0, 150]} />
-                                        <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                                        <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
+                                        <Tooltip labelStyle={{ color: "#000" }} />
                                         <Legend />
-                                    </RadarChart>
+                                        <ReferenceLine x="deaths" stroke="red" label="Max deaths" />
+                                        <ReferenceLine y={format.reduce((p, c) => p.confirmed > c.confirmed ? p.confirmed : c.confirmed, { confirmed: 0 })} label="Max confirmed" stroke="red" />
+                                        <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
+                                        <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
+                                        <Area type="monotone" dataKey="recovered" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
+
+                                    </ComposedChart>
                                 </div>
                                 :
                                 <div className="d-flex justify-content-center">

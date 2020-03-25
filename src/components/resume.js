@@ -78,7 +78,7 @@ class Resume extends Component {
             <h4>#StayAtHome</h4>
             <br />
           </header>
-          <body className="text-center">
+          <div className="text-center">
             <div className="container-xl">
               <input
                 type="text" placeholder="Search a country..."
@@ -98,6 +98,7 @@ class Resume extends Component {
                           bg={location.country !== (current ? current.country : "") ? "bg-dark" : "bg-light"}
                           text={location.country !== (current ? current.country : "") ? "white" : "black"}
                           country={location.country}
+                          province={location.province}
                           confirmed={location.latest.confirmed}
                           deaths={location.latest.deaths}
                           recovered={location.latest.recovered}
@@ -113,7 +114,7 @@ class Resume extends Component {
                 </div>
               </div>
             </div>
-          </body>
+          </div>
         </div>
       </>
     );
