@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, PieChart, Pie, Cell } from 'recharts'
 import crg from 'country-reverse-geocoding'
 import Header from './header'
-
+import { flags } from './flags'
 class Timeline extends Component {
     constructor() {
         super();
@@ -34,7 +34,7 @@ class Timeline extends Component {
         recovered.map(location => {
             delete location.Lat
             delete location.Long
-            delete location["﻿Province/State"]
+            delete location["Province/State"]
             return location
         })
         countries
@@ -47,10 +47,14 @@ class Timeline extends Component {
                     const recovered = recoFiltered || {}
                     const confirmed = location.timelines["confirmed"].timeline
                     const dates = [...Object.keys(deaths), ...Object.keys(recovered), ...Object.keys(confirmed)]
+                    
                     for (const date of dates) {
+                        const d = new Date(date).toJSON()
+                        console.log(date)
                         data.push({
-                            date: new Date(date).toJSON().slice(0, 10).split("-").reverse().join("/"),
+                            date: d.slice(0, 10).split("-").reverse().join("/"),
                             country: location.country,
+                            country_code: location.country_code,
                             deaths: deaths[date] !== undefined ? deaths[date] : 0,
                             recovered: recovered[date] !== undefined ? recovered[date] : 0,
                             infected: confirmed[date] !== undefined ? confirmed[date] : 0
@@ -92,14 +96,19 @@ class Timeline extends Component {
             <div className="container">
                 <div className="d-flex justify-content-center App-header">
                     <Header />
-                    <select value={this.state.option} onChange={this.handleChange.bind(this)} className="btn btn-light dropdown-toggle" style={{ width: "200px" }}>
+                    <img src={`https://www.countryflags.io/${flags[this.state.option]}/flat/64.png`} alt="" />
+                    <select
+                        value={this.state.option}
+                        onChange={this.handleChange.bind(this)}
+                        className="btn btn-light dropdown-toggle"
+                        style={{ width: "250px" }}>
                         {
                             //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
                             [...new Set(this.state.data.map(l => l.country))]
                                 .sort()
                                 .map((country, key) => {
-                                    return (country !== "China" ? 
-                                        <option value={country} key={key}>{country}</option>:
+                                    return (country !== "China" ?
+                                        <option value={country} key={key}>{country}</option> :
                                         null
                                     )
                                 })
@@ -112,7 +121,7 @@ class Timeline extends Component {
                                 <div className="container principal">
                                     <h3>Time Line</h3>
                                     <ComposedChart
-                                        width={window.screen.width * 0.80}
+                                        width={window.screen.width * 0.90}
                                         height={300}
                                         data={
                                             format
@@ -124,8 +133,6 @@ class Timeline extends Component {
                                                     const db = new Date(byear, bmonth, bday)
                                                     return da > db ? 1 : -1
                                                 })
-
-
                                         }
                                         margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                                         <YAxis stroke="#FFF" />
