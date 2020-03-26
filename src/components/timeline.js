@@ -25,37 +25,46 @@ class Timeline extends Component {
             const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
             this.setState({ option: country });
         });
+        const tmp = await fetch("https://covid2019-api.herokuapp.com/timeseries/recovered", { mode: "cors" })
+        const { recovered } = await tmp.json()
         const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
         const format = await res.json()
         const countries = format.locations
         const data = []
+        recovered.map(location => {
+            delete location.Lat
+            delete location.Long
+            delete location["﻿Province/State"]
+            return location
+        })
         countries
             .sort((a, b) => b.latest[this.state.sort] - a.latest[this.state.sort])
             .map(location => {
+                const recoFiltered = recovered.filter(v => v["Country/Region"] === location.country).shift()
+                recoFiltered && delete recoFiltered["Country/Region"]
                 if (location.timelines) {
                     const deaths = location.timelines["deaths"].timeline
-                    const recovered = location.timelines["recovered"].timeline
+                    const recovered = recoFiltered || {}
                     const confirmed = location.timelines["confirmed"].timeline
                     const dates = [...Object.keys(deaths), ...Object.keys(recovered), ...Object.keys(confirmed)]
-
                     for (const date of dates) {
                         data.push({
-                            date: new Date(date).toJSON().slice(5, 10).split("-").reverse().join("/"),
+                            date: new Date(date).toJSON().slice(0, 10).split("-").reverse().join("/"),
                             country: location.country,
                             deaths: deaths[date] !== undefined ? deaths[date] : 0,
                             recovered: recovered[date] !== undefined ? recovered[date] : 0,
-                            confirmed: confirmed[date] !== undefined ? confirmed[date] : 0
+                            infected: confirmed[date] !== undefined ? confirmed[date] : 0
                         })
                     }
                 }
                 return {}
             })
-        this.setState({ data })
+        this.setState({ data: data })
     }
     render() {
         const current = this.state.data.filter(l => l.country === this.state.option)
-        const format = current.filter(({ confirmed, deaths, recovered }) => confirmed + deaths + recovered > 0)
-        const keys = ["deaths", "recovered", "confirmed"]
+        const format = current.filter(({ infected, deaths, recovered }) => infected > 0)
+        const keys = ["deaths", "recovered", "infected"]
         const totals = []
         for (const key of keys) {
             let value = [...format].pop()
@@ -64,7 +73,6 @@ class Timeline extends Component {
                 value: value ? value[key] : 0
             })
         }
-        console.log(totals)
         const COLORS = ['#dc3545', '#28a745', '#ffc107'];
         const RADIAN = Math.PI / 180;
         const renderCustomizedLabel = ({
@@ -90,21 +98,35 @@ class Timeline extends Component {
                             [...new Set(this.state.data.map(l => l.country))]
                                 .sort()
                                 .map((country, key) => {
-                                    return (
-                                        <option value={country} key={key}>{country}</option>
+                                    return (country !== "China" ? 
+                                        <option value={country} key={key}>{country}</option>:
+                                        null
                                     )
                                 })
                         }
                     </select>
                     <br /><br />
-                    <div style={{ fontSize: "18px", backgroundColor: "#0282c34" }}>
+                    <div style={{ fontSize: "18px", backgroundColor: "#0282c34" }} >
                         {
                             this.state.data.length ?
-                                <div>
+                                <div className="container principal">
+                                    <h3>Time Line</h3>
                                     <ComposedChart
-                                        width={window.screen.width}
+                                        width={window.screen.width * 0.80}
                                         height={300}
-                                        data={format.slice(0, format.length / 2)}
+                                        data={
+                                            format
+                                                .slice(0, format.length / 2)
+                                                .sort((a, b) => {
+                                                    const [aday, amonth, ayear] = a.date.split("/")
+                                                    const [bday, bmonth, byear] = b.date.split("/")
+                                                    const da = new Date(ayear, amonth, aday)
+                                                    const db = new Date(byear, bmonth, bday)
+                                                    return da > db ? 1 : -1
+                                                })
+
+
+                                        }
                                         margin={{ top: 0, right: 30, left: 0, bottom: 0 }}>
                                         <YAxis stroke="#FFF" />
                                         <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
@@ -112,16 +134,20 @@ class Timeline extends Component {
                                         <Tooltip labelStyle={{ color: "#000" }} />
                                         <Legend />
                                         <ReferenceLine x="deaths" stroke="red" />
-                                        <ReferenceLine y={format.reduce((p, c) => p.confirmed > c.confirmed ? p.confirmed : c.confirmed, { confirmed: 0 })} stroke="red" style={{ color: "#FFF" }} />
-                                        <Line type="monotone" dataKey="confirmed" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
+                                        <ReferenceLine y={format.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
+                                        <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
                                         <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
                                         <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
+
                                     </ComposedChart>
-                                    <PieChart width={window.screen.width} height={250}>
+                                    <h3>Percent</h3>
+                                    <PieChart
+                                        width={window.screen.width}
+                                        height={250}>
                                         <Pie
                                             data={totals}
                                             paddingAngle={5}
-                                            cx={window.screen.width / 2.4}
+                                            cx={window.screen.width / 2}
                                             cy={100}
                                             label={renderCustomizedLabel}
                                             innerRadius={60}
@@ -132,7 +158,6 @@ class Timeline extends Component {
                                             {totals.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                         </Pie>
                                     </PieChart>
-
                                 </div>
                                 :
                                 <div className="d-flex justify-content-center">

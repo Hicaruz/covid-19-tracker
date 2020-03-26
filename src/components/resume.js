@@ -29,28 +29,37 @@ class Resume extends Component {
         }
       });
     });
+    const tmp = await fetch("https://covid2019-api.herokuapp.com/v2/current", { mode: 'cors' })
     const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
+    const reco = await tmp.json()
     const data = await res.json()
     const countries = data.locations
-    let initialStare = {
+    let initialState = {
       confirmed: 0,
       deaths: 0,
       recovered: 0
     }
+    let recovered = {}
+    reco.data.forEach(l => recovered[l.location] = l.recovered)
     for (const country of countries) {
       if (this.state.current.country) {
         const current = this.state.locations.filter(location => location.country === this.state.current.country)
         this.setState({ current: { ...current.shift(), ...this.state.current } })
       }
-      initialStare.confirmed += country.latest.confirmed
-      initialStare.deaths += country.latest.deaths
-      initialStare.recovered += country.latest.recovered
+      initialState.confirmed += country.latest.confirmed
+      initialState.deaths += country.latest.deaths
+      initialState.recovered += recovered[country.country] || 0
     }
+    countries.map(l => {
+      const { latest } = l
+      latest.recovered = recovered[l.country]
+      return l
+    })
     this.setState({
       locations: countries.sort((a, b) => b.latest[this.state.sort] - a.latest[this.state.sort]),
-      confirmed: initialStare.confirmed,
-      deaths: initialStare.deaths,
-      recovered: initialStare.recovered
+      confirmed: initialState.confirmed,
+      deaths: initialState.deaths,
+      recovered: initialState.recovered
     })
   }
   queryOnChange({ target }) {
@@ -69,10 +78,10 @@ class Resume extends Component {
     return (
       <>
         <div className="App-header">
-        <Header/>
+          <Header />
           <div className="text-center">
             <div className="container-xl">
-            <br />
+              <br />
               <input
                 type="text" placeholder="Search a country..."
                 onChange={this.queryOnChange.bind(this)}>
