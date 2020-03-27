@@ -29,11 +29,11 @@ class Resume extends Component {
         }
       });
     });
-    const tmp = await fetch("https://covid2019-api.herokuapp.com/v2/current", { mode: 'cors' })
-    const res = await fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
-    const reco = await tmp.json()
-    const data = await res.json()
-    const countries = data.locations
+    const [tmp, res] = await Promise.all([
+      fetch("https://covid2019-api.herokuapp.com/v2/current", { mode: "cors" }),
+      fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
+    ])
+    const [reco, { locations: countries }] = await Promise.all([tmp.json(), res.json()])
     let initialState = {
       confirmed: 0,
       deaths: 0,
