@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
+import { useHistory } from 'react-router'
+
 import { Resume, About, Timeline as Stats } from './components'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
+import Header from './components/header'
 class App extends Component {
 
   render() {
     return (
       <>
-        <Router>
+        <Router history={useHistory}  >
+          <Header />
           <nav className="navbar d-flex option ">
             <Link to="/"><button type="button" className="btn btn-info option">Resume</button></Link>
             <Link to="/Stats"><button type="button" className="btn btn-info option">Stats</button></Link>

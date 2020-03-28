@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Header from './header'
 import '../App.css';
 import crg from 'country-reverse-geocoding'
 import { Card } from './layout'
@@ -78,7 +77,6 @@ class Resume extends Component {
     return (
       <>
         <div className="App-header">
-          <Header />
           <div className="text-center">
             <div className="container-xl">
               <br />

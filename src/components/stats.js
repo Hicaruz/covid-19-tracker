@@ -1,79 +1,10 @@
 import React, { Component } from 'react'
-import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, PieChart, Pie, Cell } from 'recharts'
 import Map from './map'
 import crg from 'country-reverse-geocoding'
-import Header from './header'
 import { flags } from './flags'
+import { TimeLine, Stack } from './charts'
 
-const Percent = ({ totals }) => {
-    const COLORS = ['#dc3545', '#28a745', '#ffc107'];
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-        cx, cy, midAngle, innerRadius, outerRadius, percent, index,
-    }) => {
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-        return (
-            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-        );
-    };
-    return (
-        <PieChart
-            width={window.screen.width}
-            height={250}>
-            <Pie
-                data={totals}
-                paddingAngle={5}
-                cx={window.screen.width / 2}
-                cy={100}
-                label={renderCustomizedLabel}
-                innerRadius={60}
-                outerRadius={80}
-                stroke="#282c34"
-                dataKey="value"
-            >
-                {totals.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-            </Pie>
-        </PieChart>
-    )
-}
-const TimeLine = ({ format, width }) => {
-    return (
-        <ComposedChart
-            width={width}
-            height={400}
-            data={
-                format
-                    .slice(0, format.length / 2)
-                    .sort((a, b) => {
-                        const [aday, amonth, ayear] = a.date.split("/")
-                        const [bday, bmonth, byear] = b.date.split("/")
-                        const da = new Date(ayear, amonth, aday)
-                        const db = new Date(byear, bmonth, bday)
-                        return da > db ? 1 : -1
-                    })
-            }
-            margin={{ top: 30, right: 30, left: 30, bottom: 0 }}>
-            <YAxis stroke="#FFF" />
-            <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
-            <XAxis dataKey="date" stroke="#FFF" />
-            <Tooltip labelStyle={{ color: "#000" }} />
-            <Legend />
-            <ReferenceLine x="deaths" stroke="red" />
-            <ReferenceLine y={format.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
-            <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
-            <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
-            <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
-
-        </ComposedChart>
-    )
-}
-
-class Timeline extends Component {
+class Stats extends Component {
     constructor() {
         super();
         this.state = {
@@ -83,7 +14,8 @@ class Timeline extends Component {
             data: [],
             worlddata: [],
             sort: "deaths",
-            colorBy: "mortality"
+            colorBy: "mortality",
+            population: []
 
         }
     }
@@ -131,7 +63,9 @@ class Timeline extends Component {
                         data.push({
                             date: d.slice(0, 10).split("-").reverse().join("/"),
                             country: location.country,
+                            population: location.country_population * 0.001,
                             country_code: location.country_code,
+                            latest: location.latest,
                             deaths: deaths[date] !== undefined ? deaths[date] : 0,
                             recovered: recovered[date] !== undefined ? recovered[date] : 0,
                             infected: confirmed[date] !== undefined ? confirmed[date] : 0
@@ -139,11 +73,11 @@ class Timeline extends Component {
                     }
                 }
             })
-        this.setState({ data: data, worlddata: countries })
+        this.setState({ worlddata: data })
     }
     render() {
-        const current = this.state.data.filter(l => l.country === this.state.option)
-        const format = current.filter(({ infected, deaths, recovered }) => infected > 0)
+        const current = this.state.worlddata.filter(l => l.country === this.state.option)
+        const format = current.filter(({ infected }) => infected > 0)
         const keys = ["deaths", "recovered", "infected"]
         const totals = []
         for (const key of keys) {
@@ -155,9 +89,6 @@ class Timeline extends Component {
         }
         return (
             <div>
-                <div className="justify-content-center App-header">
-                    <Header />
-                </div>
                 <div className="row">
                     <div className="principal col-6">
                         <img src={`https://www.countryflags.io/${flags[this.state.option]}/flat/64.png`} alt="" />
@@ -168,7 +99,7 @@ class Timeline extends Component {
                             style={{ width: "250px" }}>
                             {
                                 //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
-                                [...new Set(this.state.data.map(l => l.country))]
+                                [...new Set(this.state.worlddata.map(l => l.country))]
                                     .sort()
                                     .map((country, key) => {
                                         return (country !== "China" ?
@@ -180,30 +111,39 @@ class Timeline extends Component {
                         </select>
                     </div>
                     <div className="principal col-6">
-                        <h3>World</h3>
+                        <h3>World Map, colored by {this.props.colorBy}</h3>
                         <select
                             value={this.state.colorBy}
                             onChange={this.handleColorChange.bind(this)}
                             className="btn btn-light dropdown-toggle"
                             style={{ width: "250px" }}>
                             <option value="mortality">mortality</option>
-                            <option value="infectivity">infectivity</option>
-                            <option value="recovered">recovered</option>
+                            {/* <option value="infectivity">infectivity</option>
+                            <option value="recovered">recovered</option> */}
 
                         </select>
                     </div>
                 </div>
                 <div style={{ fontSize: "18px", backgroundColor: "#0282c34" }} className="d-flex  justify-content-center">
                     {
-                        this.state.data.length ?
+                        this.state.worlddata.length ?
                             <div className="container-fluid">
                                 <div className="row">
                                     <div className="col">
-                                        <h3>Time Line</h3>
+                                        <h3 className="title-chart">Time Line</h3>
                                         <TimeLine format={format} width={this.getWidth()} />
                                     </div>
-                                    <div className="col" style={{ width: `${this.getWidth() - 100}px` }}>
-                                        <Map locations={this.state.worlddata} colorBy={this.state.colorBy}/>
+                                    <div className="col" style={{ width: `${this.getWidth() - 100}px`}}>
+                                        <Map locations={this.state.worlddata} colorBy={this.state.colorBy} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col">
+                                        <h3 className="title-chart">Percent for each {[...current].shift().population.toFixed()} persons (0.001%)</h3>
+                                        <Stack format={format} width={this.getWidth()} />
+                                    </div>
+                                    <div>
+                                        {/* <Stack format={format} width={this.getWidth()} /> */}
                                     </div>
                                 </div>
                             </div>
@@ -216,8 +156,9 @@ class Timeline extends Component {
                     }
                 </div>
             </div>
+
         )
     }
 
 }
-export default Timeline
+export default Stats
