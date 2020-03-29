@@ -141,7 +141,7 @@ class Stats extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col">
-                                        <h3 className="title-chart">Percent TimeLine</h3>
+                                        <h3 className="title-chart">{this.state.option}'s Percent</h3>
                                         <Stack format={format} width={this.getWidth()} />
                                     </div>
                                     <div>

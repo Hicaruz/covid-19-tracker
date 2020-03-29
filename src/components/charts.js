@@ -1,4 +1,4 @@
-import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, AreaChart } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, AreaChart, CartesianGrid } from 'recharts'
 import React from 'react'
 
 const Stack = ({ format, width }) => {
@@ -46,6 +46,7 @@ const Stack = ({ format, width }) => {
             <XAxis dataKey="date" stroke="#FFF" />
             <YAxis tickFormatter={toPercent} stroke="#FFF" />
             <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
+            <CartesianGrid/>
             <Tooltip content={renderTooltipContent} />
             <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" fillOpacity={1} />
             <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" fillOpacity={1} />

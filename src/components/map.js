@@ -15,7 +15,7 @@ class Map extends Component {
 
     getWidth() {
         const { width, height } = window.screen
-        return width > height ? width * 0.75 : width * 2.3
+        return width > height ? width * 0.75 : width * 2.4
     }
     handleClick(event) {
         console.log(event)
