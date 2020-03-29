@@ -52,22 +52,26 @@ class Stats extends Component {
             .forEach(location => {
                 const recoFiltered = recovered.filter(v => v["Country/Region"] === location.country).shift()
                 recoFiltered && delete recoFiltered["Country/Region"]
+                const recoFormarted = {}
+                for (const k in recoFiltered) {
+                    recoFormarted[new Date(k).toJSON().slice(0, 11) + "00:00:00Z"] = recoFiltered[k]
+                }
                 if (location.timelines) {
                     const deaths = location.timelines["deaths"].timeline
-                    const recovered = recoFiltered || {}
+                    const recovered = recoFormarted || {}
                     const confirmed = location.timelines["confirmed"].timeline
                     const dates = [...Object.keys(deaths), ...Object.keys(recovered), ...Object.keys(confirmed)]
-
+                    console.log(location.timelines["deaths"].timeline, recoFormarted)
                     for (const date of dates) {
                         const d = new Date(date).toJSON()
                         data.push({
                             date: d.slice(0, 10).split("-").reverse().join("/"),
                             country: location.country,
-                            population: location.country_population * 0.001,
+                            population: location.country_population,
                             country_code: location.country_code,
                             latest: location.latest,
                             deaths: deaths[date] !== undefined ? deaths[date] : 0,
-                            recovered: recovered[date] !== undefined ? recovered[date] : 0,
+                            recovered: recoFormarted[date] !== undefined ? recoFormarted[date] : 0,
                             infected: confirmed[date] !== undefined ? confirmed[date] : 0
                         })
                     }
@@ -89,57 +93,55 @@ class Stats extends Component {
         }
         return (
             <div>
-                <div className="row">
-                    <div className="principal col-6">
-                        <img src={`https://www.countryflags.io/${flags[this.state.option]}/flat/64.png`} alt="" />
-                        <select
-                            value={this.state.option}
-                            onChange={this.handleChange.bind(this)}
-                            className="btn btn-light dropdown-toggle"
-                            style={{ width: "250px" }}>
-                            {
-                                //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
-                                [...new Set(this.state.worlddata.map(l => l.country))]
-                                    .sort()
-                                    .map((country, key) => {
-                                        return (country !== "China" ?
-                                            <option value={country} key={key}>{country}</option> :
-                                            null
-                                        )
-                                    })
-                            }
-                        </select>
-                    </div>
-                    <div className="principal col-6">
-                        <h3>World Map, colored by {this.props.colorBy}</h3>
-                        <select
-                            value={this.state.colorBy}
-                            onChange={this.handleColorChange.bind(this)}
-                            className="btn btn-light dropdown-toggle"
-                            style={{ width: "250px" }}>
-                            <option value="mortality">mortality</option>
-                            {/* <option value="infectivity">infectivity</option>
-                            <option value="recovered">recovered</option> */}
-
-                        </select>
-                    </div>
-                </div>
-                <div style={{ fontSize: "18px", backgroundColor: "#0282c34" }} className="d-flex  justify-content-center">
+                <div style={{ fontSize: "18px", backgroundColor: "#0282c34", marginTop: "20px" }} className="d-flex  justify-content-center">
                     {
                         this.state.worlddata.length ?
                             <div className="container-fluid">
                                 <div className="row">
                                     <div className="col">
+                                        <div className="principal">
+                                            <img src={`https://www.countryflags.io/${flags[this.state.option]}/flat/64.png`} alt="" />
+                                            <select
+                                                value={this.state.option}
+                                                onChange={this.handleChange.bind(this)}
+                                                className="btn btn-light dropdown-toggle"
+                                                style={{ width: "250px", marginBottom: "20px" }}>
+                                                {
+                                                    //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
+                                                    [...new Set(this.state.worlddata.map(l => l.country))]
+                                                        .sort()
+                                                        .map((country, key) => {
+                                                            return (country !== "China" ?
+                                                                <option value={country} key={key}>{country}</option> :
+                                                                null
+                                                            )
+                                                        })
+                                                }
+                                            </select>
+                                        </div>
                                         <h3 className="title-chart">Time Line</h3>
                                         <TimeLine format={format} width={this.getWidth()} />
                                     </div>
-                                    <div className="col" style={{ width: `${this.getWidth() - 100}px`}}>
+                                    <div className="col" style={{ width: `${this.getWidth() - 100}px`, marginTop:"20px" }}>
+                                        <div className="principal">
+                                            <h3>World Map, colored by {this.props.colorBy}</h3>
+                                            <select
+                                                value={this.state.colorBy}
+                                                onChange={this.handleColorChange.bind(this)}
+                                                className="btn btn-light dropdown-toggle"
+                                                style={{ width: "250px" }}>
+                                                <option value="mortality">mortality</option>
+                                                {/* <option value="infectivity">infectivity</option>
+                            <option value="recovered">recovered</option> */}
+
+                                            </select>
+                                        </div>
                                         <Map locations={this.state.worlddata} colorBy={this.state.colorBy} />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col">
-                                        <h3 className="title-chart">Percent for each {[...current].shift().population.toFixed()} persons (0.001%)</h3>
+                                        <h3 className="title-chart">Percent TimeLine</h3>
                                         <Stack format={format} width={this.getWidth()} />
                                     </div>
                                     <div>

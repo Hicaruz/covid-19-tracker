@@ -4,10 +4,8 @@ import React from 'react'
 const Stack = ({ format, width }) => {
     const getPercent = (value, total) => {
         const ratio = total > 0 ? value / total : 0;
-
         return toPercent(ratio, 2);
     };
-
     const toPercent = (decimal, fixed = 0) => {
         return `${(decimal * 100).toFixed(fixed)}%`;
     };
@@ -16,21 +14,20 @@ const Stack = ({ format, width }) => {
         const total = payload.reduce((result, entry) => (result + entry.value), 0);
 
         return (
-            <div className="customized-tooltip-content" style={{backgroundColor: "#FFF", borderRadius:"15px"}}>
-                <ul className="list">
-                    {
-                        payload.map((entry, index) => (
-                            <li key={`item-${index}`} style={{ color: entry.color }}>
-                                {`${entry.name}: ${entry.value}(${getPercent(entry.value, total)})`}
-                            </li>
-                        ))
-                    }
-                </ul>
+            <div className="customized-tooltip-content container" style={{ backgroundColor: "#FFF", borderRadius: "15px", padding: "10px" }}>
+                {
+                    payload.map((entry, index) => (
+                        <p key={`item-${index}`} style={{ color: entry.color }}>
+                            {`${entry.name}: ${getPercent(entry.value, total)}`}
+                        </p>
+                    ))
+                }
             </div>
         );
     };
     return (
         <AreaChart
+            syncId="chart"
             width={width}
             height={400}
             data={format
@@ -50,15 +47,16 @@ const Stack = ({ format, width }) => {
             <YAxis tickFormatter={toPercent} stroke="#FFF" />
             <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
             <Tooltip content={renderTooltipContent} />
-            <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" />
-            <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" />
-            <Area type="monotone" dataKey="population" stackId="1" stroke="#28a745" fill="#28a745" />
+            <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" fillOpacity={1} />
+            <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" fillOpacity={1} />
+            <Area type="monotone" dataKey="recovered" stackId="1" stroke="" fill="#28a745" fillOpacity={1} />
         </AreaChart>
     )
 }
 const TimeLine = ({ format, width }) => {
     return (
         <ComposedChart
+            syncId="chart"
             width={width}
             height={400}
             data={
@@ -73,6 +71,7 @@ const TimeLine = ({ format, width }) => {
                     })
             }
             margin={{ top: 60, right: 30, left: 30, bottom: 0 }}>
+
             <YAxis stroke="#FFF" />
             <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
             <XAxis dataKey="date" stroke="#FFF" />
@@ -81,8 +80,8 @@ const TimeLine = ({ format, width }) => {
             <ReferenceLine x="deaths" stroke="red" />
             <ReferenceLine y={format.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
             <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
+            <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="#28a745" />
             <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
-            <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="url(#colorUv)" />
 
         </ComposedChart>
     )
