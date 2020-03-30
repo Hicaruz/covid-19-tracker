@@ -30,6 +30,7 @@ class Stats extends Component {
         return screen > 600 ? screen * 0.50 : screen
     }
     async componentDidMount() {
+        console.log(this.props.location.search)
         navigator.geolocation.getCurrentPosition(({ coords }) => {
             const { latitude, longitude } = coords;
             const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
@@ -40,7 +41,7 @@ class Stats extends Component {
             fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", { mode: 'cors' })
         ])
         const [{ recovered }, { locations: countries }] = await Promise.all([tmp.json(), res.json()])
-        const data = []
+        const worldstats = []
         recovered.map(location => {
             delete location.Lat
             delete location.Long
@@ -53,19 +54,17 @@ class Stats extends Component {
                 const recoFiltered = recovered.filter(v => v["Country/Region"] === location.country).shift()
                 recoFiltered && delete recoFiltered["Country/Region"]
                 const recoFormarted = {}
-                for (const k in recoFiltered) {
-                    recoFormarted[new Date(k).toJSON().slice(0, 11) + "00:00:00Z"] = recoFiltered[k]
+                for (const date in recoFiltered) {
+                    recoFormarted[new Date(date).toJSON().slice(0, 11) + "00:00:00Z"] = recoFiltered[date]
                 }
                 if (location.timelines) {
                     const deaths = location.timelines["deaths"].timeline
                     const recovered = recoFormarted || {}
                     const confirmed = location.timelines["confirmed"].timeline
                     const dates = [...Object.keys(deaths), ...Object.keys(recovered), ...Object.keys(confirmed)]
-                    console.log(location.timelines["deaths"].timeline, recoFormarted)
                     for (const date of dates) {
-                        const d = new Date(date).toJSON()
-                        data.push({
-                            date: d.slice(0, 10).split("-").reverse().join("/"),
+                        worldstats.push({
+                            date: new Date(date).toJSON().slice(0, 10).split("-").reverse().join("/"),
                             country: location.country,
                             population: location.country_population,
                             country_code: location.country_code,
@@ -77,23 +76,23 @@ class Stats extends Component {
                     }
                 }
             })
-        this.setState({ worlddata: data })
+        this.setState({ worlddata: worldstats })
     }
     render() {
         const current = this.state.worlddata.filter(l => l.country === this.state.option)
         const format = current.filter(({ infected }) => infected > 0)
-        const keys = ["deaths", "recovered", "infected"]
+        const types = ["deaths", "recovered", "infected"]
         const totals = []
-        for (const key of keys) {
+        for (const type of types) {
             let value = [...format].pop()
             totals.push({
-                name: key,
-                value: value ? value[key] : 0
+                name: type,
+                value: value ? value[type] : 0
             })
         }
         return (
             <div>
-                <div style={{ fontSize: "18px", backgroundColor: "#0282c34", marginTop: "20px" }} className="d-flex  justify-content-center">
+                <div className="d-flex justify-content-center stats">
                     {
                         this.state.worlddata.length ?
                             <div className="container-fluid">
@@ -104,8 +103,8 @@ class Stats extends Component {
                                             <select
                                                 value={this.state.option}
                                                 onChange={this.handleChange.bind(this)}
-                                                className="btn btn-light dropdown-toggle"
-                                                style={{ width: "250px", marginBottom: "20px" }}>
+                                                className="btn btn-light dropdown-toggle w-auto"
+                                               >
                                                 {
                                                     //[...new Set(this.state.data.map(l => `${l.country}${l.province ? `, ${l.province}` : ""} `))]
                                                     [...new Set(this.state.worlddata.map(l => l.country))]
@@ -128,8 +127,7 @@ class Stats extends Component {
                                             <select
                                                 value={this.state.colorBy}
                                                 onChange={this.handleColorChange.bind(this)}
-                                                className="btn btn-light dropdown-toggle"
-                                                style={{ width: "250px" }}>
+                                                className="btn btn-light dropdown-toggle w-auto">
                                                 <option value="mortality">mortality</option>
                                                 {/* <option value="infectivity">infectivity</option>
                             <option value="recovered">recovered</option> */}

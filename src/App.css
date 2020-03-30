@@ -26,11 +26,6 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
 }
-
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -39,20 +34,7 @@
     transform: rotate(360deg);
   }
 }
-.main {
-  color: black;
-}
-/* .list {
-  margin: 5%;
-} */
-.card {
-  margin: 10px 0 10px;
-}
-.btn {
-  height: 50px;
-  width: 80px;
-  margin: 20px 0 0;
-}
+
 @media only screen and (min-width: 600px) {
   .option {
     margin: 20px 20px 0;
@@ -60,20 +42,13 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-
   }
 }
 
-.text-black{
+.text-black {
   color: black;
 }
-img{
+img {
   position: relative;
-  bottom: 2.5px
-}
-.graphs{
-  margin: 0 150px 0px;
-}
-.title-chart{
-  margin-left: 20px;
+  bottom: 2.5px;
 }
