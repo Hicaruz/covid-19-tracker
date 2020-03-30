@@ -2,11 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 15vmin;
-  margin: 10px 0 10px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -48,7 +43,64 @@
 .text-black {
   color: black;
 }
-img {
-  position: relative;
-  bottom: 2.5px;
+th {
+  cursor: pointer;
+}
+.confirmed{
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.confirmed:hover{
+  background-color: #ecb40c;
+  border-color: #ecb40c;
+}
+.deaths{
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+.deaths:hover{
+  background-color: #c42636;
+  border-color: #c42636;
+}
+.recovered{
+  background-color: #28a745;
+  border-color: #28a745;
+}
+.recovered:hover{
+  background-color: #1b9b39;
+  border-color: #1b9b39;
+}
+.active:hover{
+  background-color: rgb(228, 228, 228);
+}
+.table td, .table th {
+  padding: .75rem;
+  vertical-align: top;
+  border-top: none;
+}
+.table-light tbody+tbody, .table-light td, .table-light th, .table-light thead th {
+  border-color: transparent;
+}
+.list{
+  margin: 0 20px 20px;
+}
+.loading {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  height: 90vh;
+  width: 10vw;
+}
+
+.footer{
+  position: static;
+  bottom: 0;
+  width: 100%;
+}
+button{
+  margin: 0 10px 0;
+}
+.table{
+  border-radius: 10px;
 }

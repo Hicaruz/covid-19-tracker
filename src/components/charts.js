@@ -31,7 +31,6 @@ const Stack = ({ format, width }) => {
             width={width}
             height={400}
             data={format
-                .slice(0, format.length / 2)
                 .sort((a, b) => {
                     const [aday, amonth, ayear] = a.date.split("/")
                     const [bday, bmonth, byear] = b.date.split("/")
@@ -62,7 +61,6 @@ const TimeLine = ({ format, width }) => {
             height={400}
             data={
                 format
-                    .slice(0, format.length / 2)
                     .sort((a, b) => {
                         const [aday, amonth, ayear] = a.date.split("/")
                         const [bday, bmonth, byear] = b.date.split("/")
