@@ -49,7 +49,40 @@ async function setup() {
             deaths: deaths += latest.deaths,
             recovered: recovered += latest.recovered,
         }
-    }, { confirmed: 0, deaths: 0, recovered: 0, active: 0 })
-    return { world, summary }
+    }, { confirmed: 0, deaths: 0, recovered: 0 })
+    const worldObject = world.reduce((_world, current) => {
+        const location = _world[current.country]
+        if (location) {
+            // const { latest, timelines } = location
+            // const new_data = {
+            //     ...location,
+            //     latest: {
+            //         confirmed: current.latest.confirmed + latest.confirmed,
+            //         deaths: current.latest.deaths + latest.deaths,
+            //         recovered: current.latest.recovered + latest.recovered
+            //     },
+            //     timelines: {
+            //         confirmed: {
+            //             latest: current.latest.confirmed + latest.confirmed,
+            //             timeline: 
+            //         },
+            //         deaths: {
+            //             latest: current.latest.deaths + latest.deaths,
+            //             timeline:
+            //         },
+            //         recovered: {
+            //             latest: current.latest.recovered + latest.recovered,
+            //             timeline:
+            //         }
+            //     }
+
+            // }
+            _world[current.country] = location.latest.confirmed >= current.latest.confirmed ? location : current
+        } else {
+            _world[current.country] = current
+        }
+        return _world
+    }, {})
+    return { world: Object.values(worldObject), summary }
 }
 export default setup

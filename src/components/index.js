@@ -1,7 +1,5 @@
-import Resume from './resume'
-import About from './about'
-import Timeline from './stats'
-import Map from './map'
-import Dashboard from './dashboard'
 
-export { Resume, About, Timeline, Map, Dashboard }
+import Dashboard from './dashboard'
+import Header from './header'
+import Footer from './footer'
+export { Footer, Header, Dashboard }
