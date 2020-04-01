@@ -13,7 +13,8 @@ class Dashboard extends Component {
             summary: {},
             world: [],
             current: {},
-            option: {}
+            option: {},
+            mode: "mortality"
         }
         this.showStats = this.showStats.bind(this)
 
@@ -54,11 +55,15 @@ class Dashboard extends Component {
                                     showStats={this.showStats} />
                             </Col>
                             <Col sm={12} lg={7}>
+                                <h1>{this.state.option.country || "World map"} </h1>
                                 <Map
                                     worldData={this.state.world}
+                                    showStats={this.showStats}
+                                    mode={this.state.mode}
                                     current={Object.values(this.state.option).length ?
                                         this.state.option :
-                                        this.state.current} />
+                                        this.state.current}
+                                />
                             </Col>
                         </Row> :
                         <div>

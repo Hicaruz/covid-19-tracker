@@ -10,7 +10,7 @@ class Map extends Component {
             colorBy: "mortality"
         }
     }
-    onClick(ev){
+    onClick(ev) {
         console.log(ev)
     }
     render() {
@@ -22,7 +22,7 @@ class Map extends Component {
                             geographies.map(geo => {
                                 const { ISO_A2: code } = geo.properties
                                 const current = [...this.props.worldData].filter(({ country_code }) => country_code === code).shift()
-
+                                console.log(current)
                                 if (!current) {
                                     return <Geography
                                         key={geo.rsmKey}
@@ -30,22 +30,25 @@ class Map extends Component {
                                         fill="#373738" stroke="#373738"
                                     />
                                 }
-
                                 const latest = Object.keys(current || {}).length ? current.latest : { confirmed: 0, deaths: 0, recovered: 0 }
                                 const sortData = {
                                     infectivity: (latest.confirmed / (current.population ? current.population : 1)) * 100,
-                                    mortality: (latest.deaths / latest.confirmed) * 100,
+                                    mortality: (latest.deaths / latest.confirmed) * 2000,
                                     recovered: (latest.recovered / latest.confirmed) * 100
                                 }
-                                const percent = (latest.deaths / latest.confirmed) * 2000
+                                const percent = sortData[this.props.mode]
                                 const hex = (isNaN(percent) ? 0 : percent).toFixed()
                                 !colors && console.log(hex > 100)
                                 return (
-                                    <g onClick={() => this.onClick(current)}>
+                                    <g onClick={() => this.props.showStats({
+                                        country: ""
+                                    })}>
                                         <Geography
                                             key={geo.rsmKey}
                                             geography={geo}
-                                            fill={colors[hex > 100 ? 100 : hex] || "#0F0"} stroke={"#000"} strokeWidth={.5}
+                                            fill={colors[hex > 100 ? 100 : hex] || "#0F0"}
+                                            stroke={"#000"}
+                                            strokeWidth={.1}
                                         />
                                     </g>)
                             })
@@ -60,7 +63,6 @@ class Map extends Component {
                                     strokeWidth="2"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    transform="translate(-12, -24)"
                                 >
                                     <circle r={5} fill="#F00" stroke="#fff" strokeWidth={2} />
                                 </g>
