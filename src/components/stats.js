@@ -30,7 +30,7 @@ class Stats extends Component {
         return screen > 600 ? screen * 0.50 : screen
     }
     async componentDidMount() {
-        console.log(this.props.location.search)
+        // console.log(this.props.location.search)
         navigator.geolocation.getCurrentPosition(({ coords }) => {
             const { latitude, longitude } = coords;
             const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);

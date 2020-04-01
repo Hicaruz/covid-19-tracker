@@ -83,6 +83,7 @@ async function setup() {
         }
         return _world
     }, {})
+    
     return { world: Object.values(worldObject), summary }
 }
 export default setup
