@@ -12,10 +12,13 @@ class Dashboard extends Component {
         this.state = {
             summary: {},
             world: [],
-            current: {}
+            current: {},
+            option: {},
+            mode: "mortality"
         }
-    }
+        this.showStats = this.showStats.bind(this)
 
+    }
     async componentDidMount() {
         navigator.geolocation.getCurrentPosition(({ coords }) => {
             const { latitude, longitude } = coords;
@@ -23,27 +26,53 @@ class Dashboard extends Component {
             this.setState({ current: { latitude, longitude, country } });
         });
         const { summary, world } = await getData()
-
         // if(Object.values(this.state.current).length){
         //     const current = [...world].filter(location => location.country === current.country)
 
         // }
-        this.setState({ summary, world })
+        console.log(world)
+        this.setState({ summary: Object.entries(summary), world })
     }
-    showStats(location){
-        console.log(location)
+    showStats(location) {
+        const { country, coordinates, latest } = [...this.state.world].filter(l => l.country === location).shift()
+        this.setState({
+            option: {
+                summary: Object.entries(latest),
+                country,
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            }
+        })
     }
     render() {
+
         return (
-            <Container fluid style={{margin: "20px 0 20px"}}>
+            <Container fluid style={{ margin: "20px 0 20px" }}>
                 {
                     this.state.world.length ?
                         <Row>
                             <Col sm={12} lg={5} >
-                                <WorldTable worldData={this.state.world} showStats={this.showStats}/>
+                                <WorldTable
+                                    worldData={this.state.world}
+                                    showStats={this.showStats} />
                             </Col>
                             <Col sm={12} lg={7}>
-                                <Map worldData={this.state.world} current={this.state.current}/>
+                                {/* <h1>{`${this.state.option.country || "World"}'s stats`} </h1> */}
+                                <Map
+                                    worldData={this.state.world}
+                                    showStats={this.showStats}
+                                    mode={this.state.mode}
+                                    current={
+                                        Object.values(this.state.option).length ?
+                                            this.state.option :
+                                            this.state.current
+                                    }
+                                    summary={
+                                        this.state.option.country ?
+                                            this.state.option.summary :
+                                            this.state.summary
+                                    }
+                                />
                             </Col>
                         </Row> :
                         <div>
@@ -52,6 +81,7 @@ class Dashboard extends Component {
                                 src={logo}
                                 className="loading App-logo"
                             />
+
                         </div>
                 }
             </Container>
