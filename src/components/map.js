@@ -10,7 +10,7 @@ class Map extends Component {
         this.state = {
             geoUrl: "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json",
             colorBy: "mortality",
-            map: true
+            map: false
         }
     }
     render() {
