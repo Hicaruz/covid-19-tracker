@@ -45,10 +45,13 @@
 }
 th {
   cursor: pointer;
+  margin: 0 10px 0;
 }
 .confirmed {
   background-color: #ffc107;
   border-color: #ffc107;
+  width: 20%;
+  font-size: 23px;
 }
 .confirmed:hover {
   background-color: #ecb40c;
@@ -57,6 +60,8 @@ th {
 .deaths {
   background-color: #dc3545;
   border-color: #dc3545;
+  width: 20%;
+  font-size: 23px;
 }
 .deaths:hover {
   background-color: #c42636;
@@ -65,17 +70,21 @@ th {
 .recovered {
   background-color: #28a745;
   border-color: #28a745;
+  width: 20%;
+  font-size: 23px;
 }
 .recovered:hover {
   background-color: #1b9b39;
   border-color: #1b9b39;
 }
-.active:hover {
+.active:hover,
+.country:hover {
   background-color: rgb(228, 228, 228);
 }
+
 .table td,
 .table th {
-  padding: 0.75rem;
+  padding: 0.5rem;
   vertical-align: top;
   border-top: none;
 }
@@ -113,3 +122,14 @@ button {
   fill-opacity: 1;
   font-size: small;
 }
+
+.d-display{
+  display: none;
+}
+/* .thead{
+  display: flex;
+  position: fixed;
+  background-color: #fff;
+} */
+
+

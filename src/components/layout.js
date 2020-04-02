@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Container, Row, InputGroup, FormControl } from 'react-bootstrap'
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+
 class Card extends Component {
 
   render() {
@@ -52,6 +54,7 @@ class WorldTable extends Component {
   }
 
   render() {
+    const columns = ["country", "confirmed", "deaths", "recovered"]
     return (
       <Container >
         <Row className="list">
@@ -66,14 +69,29 @@ class WorldTable extends Component {
         <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
           <Table variant="light" responsive size="sm" >
             <thead>
-              <tr>
-                <th onClick={() => this.sortBy("country")} className="active">Country</th>
-                <th onClick={() => this.sortBy("confirmed")} className="confirmed">Confirmed</th>
-                <th onClick={() => this.sortBy("deaths")} className="deaths">Deaths</th>
-                <th onClick={() => this.sortBy("recovered")} className="recovered">Recovered</th>
+              <tr className="thead">
+                <th className="active">#</th>
+                {
+                  columns.map((title, key) =>
+                    <th
+                      key={key}
+                      onClick={() => this.sortBy(title)}
+                      className={title}>
+                      {title}
+                      {
+                        this.state.order ? 
+                        <MdKeyboardArrowDown className={this.state.sortBy === title ? "" : "d-display"} /> :
+                        <MdKeyboardArrowUp className={this.state.sortBy === title ? "" : "d-display"} />
+                      }
+                    </th>
+                  )
+                }
               </tr>
             </thead>
             <tbody >
+            {/* <tr>
+              <td>dummie</td>
+            </tr> */}
               {
                 this.props.worldData
                   .filter(location => this.checkInput(location))
@@ -87,6 +105,7 @@ class WorldTable extends Component {
                   .map((location, key) => {
                     return (
                       <tr key={key} className="active" onClick={() => this.props.showStats(location.country)}>
+                        <td>{key + 1}</td>
                         <td>
                           <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
                           {' '}

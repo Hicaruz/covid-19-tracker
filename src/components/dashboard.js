@@ -55,7 +55,7 @@ class Dashboard extends Component {
                                     showStats={this.showStats} />
                             </Col>
                             <Col sm={12} lg={7}>
-                                <h1>{this.state.option.country || "World map"} </h1>
+                                <h1>{`${this.state.option.country}'s stats `|| "World map"} </h1>
                                 <Map
                                     worldData={this.state.world}
                                     showStats={this.showStats}

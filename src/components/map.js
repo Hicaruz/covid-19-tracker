@@ -10,9 +10,6 @@ class Map extends Component {
             colorBy: "mortality"
         }
     }
-    onClick(ev) {
-        console.log(ev)
-    }
     render() {
         return (
             <>
@@ -22,7 +19,6 @@ class Map extends Component {
                             geographies.map(geo => {
                                 const { ISO_A2: code } = geo.properties
                                 const current = [...this.props.worldData].filter(({ country_code }) => country_code === code).shift()
-                                console.log(current)
                                 if (!current) {
                                     return <Geography
                                         key={geo.rsmKey}
@@ -38,11 +34,8 @@ class Map extends Component {
                                 }
                                 const percent = sortData[this.props.mode]
                                 const hex = (isNaN(percent) ? 0 : percent).toFixed()
-                                !colors && console.log(hex > 100)
                                 return (
-                                    <g onClick={() => this.props.showStats({
-                                        country: ""
-                                    })}>
+                                    <g onClick={() => this.props.showStats(current.country)}>
                                         <Geography
                                             key={geo.rsmKey}
                                             geography={geo}
