@@ -53,37 +53,37 @@ async function setup() {
     const worldObject = world.reduce((_world, current) => {
         const location = _world[current.country]
         if (location) {
-            // const { latest, timelines } = location
-            // const new_data = {
-            //     ...location,
-            //     latest: {
-            //         confirmed: current.latest.confirmed + latest.confirmed,
-            //         deaths: current.latest.deaths + latest.deaths,
-            //         recovered: current.latest.recovered + latest.recovered
-            //     },
-            //     timelines: {
-            //         confirmed: {
-            //             latest: current.latest.confirmed + latest.confirmed,
-            //             timeline: 
-            //         },
-            //         deaths: {
-            //             latest: current.latest.deaths + latest.deaths,
-            //             timeline:
-            //         },
-            //         recovered: {
-            //             latest: current.latest.recovered + latest.recovered,
-            //             timeline:
-            //         }
-            //     }
+            const { latest, timelines } = location
+            const merge_data = {
+                ...location,
+                latest: {
+                    confirmed: current.latest.confirmed + latest.confirmed,
+                    deaths: current.latest.deaths + latest.deaths,
+                    recovered: current.latest.recovered + latest.recovered
+                },
+                timelines: {
+                    confirmed: {
+                        latest: current.latest.confirmed + latest.confirmed,
+                        timeline: { ...timelines.confirmed, ...current.timelines.confirmed.timeline}
+                    },
+                    deaths: {
+                        latest: current.latest.deaths + latest.deaths,
+                        timeline:{ ...timelines.deaths, ...current.timelines.deaths.timeline}
+                    },
+                    recovered: {
+                        latest: current.latest.recovered + latest.recovered,
+                        timeline: { ...timelines.recovered, ...current.timelines.recovered.timeline}
+                    }
+                }
 
-            // }
-            _world[current.country] = location.latest.confirmed >= current.latest.confirmed ? location : current
+            }
+            _world[current.country] = merge_data
         } else {
             _world[current.country] = current
         }
         return _world
     }, {})
-    
+
     return { world: Object.values(worldObject), summary }
 }
 export default setup

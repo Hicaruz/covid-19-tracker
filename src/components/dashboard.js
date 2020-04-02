@@ -26,17 +26,18 @@ class Dashboard extends Component {
             this.setState({ current: { latitude, longitude, country } });
         });
         const { summary, world } = await getData()
-        console.log(world)
         // if(Object.values(this.state.current).length){
         //     const current = [...world].filter(location => location.country === current.country)
 
         // }
-        this.setState({ summary, world })
+        console.log(world)
+        this.setState({ summary: Object.entries(summary), world })
     }
     showStats(location) {
-        const { country, coordinates } = [...this.state.world].filter(l => l.country === location).shift()
+        const { country, coordinates, latest } = [...this.state.world].filter(l => l.country === location).shift()
         this.setState({
             option: {
+                summary: Object.entries(latest),
                 country,
                 latitude: coordinates.latitude,
                 longitude: coordinates.longitude
@@ -44,6 +45,7 @@ class Dashboard extends Component {
         })
     }
     render() {
+
         return (
             <Container fluid style={{ margin: "20px 0 20px" }}>
                 {
@@ -55,14 +57,21 @@ class Dashboard extends Component {
                                     showStats={this.showStats} />
                             </Col>
                             <Col sm={12} lg={7}>
-                                <h1>{`${this.state.option.country}'s stats `|| "World map"} </h1>
+                                {/* <h1>{`${this.state.option.country || "World"}'s stats`} </h1> */}
                                 <Map
                                     worldData={this.state.world}
                                     showStats={this.showStats}
                                     mode={this.state.mode}
-                                    current={Object.values(this.state.option).length ?
-                                        this.state.option :
-                                        this.state.current}
+                                    current={
+                                        Object.values(this.state.option).length ?
+                                            this.state.option :
+                                            this.state.current
+                                    }
+                                    summary={
+                                        this.state.option.country ?
+                                            this.state.option.summary :
+                                            this.state.summary
+                                    }
                                 />
                             </Col>
                         </Row> :
@@ -72,6 +81,7 @@ class Dashboard extends Component {
                                 src={logo}
                                 className="loading App-logo"
                             />
+
                         </div>
                 }
             </Container>
