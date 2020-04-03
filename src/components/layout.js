@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Container, Row, InputGroup, FormControl } from 'react-bootstrap'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardArrowRight } from "react-icons/md";
 
 class Card extends Component {
 
@@ -30,7 +30,7 @@ class WorldTable extends Component {
     this.state = {
       sortBy: "country",
       order: false,
-      query: ""
+      query: "",
     }
   }
   sortBy(sortBy) {
@@ -54,7 +54,7 @@ class WorldTable extends Component {
   }
 
   render() {
-    const columns = ["country", "confirmed", "deaths", "recovered"]
+    const columns = ["country"]
     return (
       <Container >
         <Row className="list">
@@ -67,7 +67,7 @@ class WorldTable extends Component {
           </InputGroup>
         </Row>
         <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
-          <Table variant="light" responsive size="sm" >
+          <Table variant="light" responsive size="sm" style={{ width: this.props.placeSelected ? "50%" : "100%" }}>
             <thead>
               <tr className="thead">
                 <th className="active">#</th>
@@ -79,9 +79,9 @@ class WorldTable extends Component {
                       className={title}>
                       {title}
                       {
-                        this.state.order ? 
-                        <MdKeyboardArrowDown className={this.state.sortBy === title ? "" : "d-display"} /> :
-                        <MdKeyboardArrowUp className={this.state.sortBy === title ? "" : "d-display"} />
+                        this.state.order ?
+                          <MdKeyboardArrowDown className={this.state.sortBy === title ? "" : "d-display"} /> :
+                          <MdKeyboardArrowUp className={this.state.sortBy === title ? "" : "d-display"} />
                       }
                     </th>
                   )
@@ -89,7 +89,7 @@ class WorldTable extends Component {
               </tr>
             </thead>
             <tbody >
-            {/* <tr>
+              {/* <tr>
               <td>dummie</td>
             </tr> */}
               {
@@ -104,16 +104,24 @@ class WorldTable extends Component {
                   .sort((a, b) => this.orderBy(a, b))
                   .map((location, key) => {
                     return (
-                      <tr key={key} className="active" onClick={() => this.props.showStats(location.country)}>
+                      <tr
+                        key={key}
+                        className="active"
+                        onClick={() => this.props.showStats(location.country)}>
                         <td>{key + 1}</td>
-                        <td>
-                          <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
-                          {' '}
-                          {location.country}
+                        <td className="icon">
+                          <span>
+                            <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
+                            {' '}
+                            {location.country}
+                          </span>
+                          <span className="">
+                            <MdKeyboardArrowRight />
+                          </span>
                         </td>
-                        <td className="confirmed">{location.confirmed}</td>
+                        {/* <td className="confirmed">{location.confirmed}</td>
                         <td className="deaths">{location.deaths}</td>
-                        <td className="recovered">{location.recovered}</td>
+                        <td className="recovered">{location.recovered}</td> */}
                       </tr>
                     )
                   })

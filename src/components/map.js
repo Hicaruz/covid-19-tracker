@@ -36,7 +36,6 @@ class Map extends Component {
                         <>
                             <Row className="cards">
                                 {
-
                                     this.props.summary.map(([title, value], key) =>
                                         <Card
                                             key={key}
@@ -44,7 +43,7 @@ class Map extends Component {
                                             text={_colors[title]}
                                             className="text-center p-3">
                                             <h1>{title}</h1>
-                                            <h4>{value}</h4>
+                                            <h4 className="text-white">{value}</h4>
                                         </Card>)
                                 }
                             </Row>
