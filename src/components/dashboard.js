@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { WorldTable } from './layout'
 import logo from '../logo.svg'
 import Map from './map'
+import { flags } from './flags'
 
 class Dashboard extends Component {
     constructor() {
@@ -24,7 +25,7 @@ class Dashboard extends Component {
         navigator.geolocation.getCurrentPosition(({ coords }) => {
             const { latitude, longitude } = coords;
             const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
-            this.setState({ current: { latitude, longitude, country } });
+            this.setState({ current: { latitude, longitude, country, country_code: flags[country] || "XX" } });
         });
         const { summary, world } = await getData()
         // if(Object.values(this.state.current).length){
@@ -35,9 +36,12 @@ class Dashboard extends Component {
         this.setState({ summary: Object.entries(summary), world })
     }
     showStats(location) {
-        const { country, coordinates, latest } = [...this.state.world].filter(l => l.country === location).shift()
+        console.log(location)
+        const current = [...this.state.world].filter(l => l.country === location).shift()
+        const { country, coordinates, latest } = current
         this.setState({
             option: {
+                ...current,
                 summary: Object.entries(latest),
                 country,
                 latitude: coordinates.latitude,
@@ -53,26 +57,33 @@ class Dashboard extends Component {
                 {
                     this.state.world.length ?
                         <Row>
-                            <Col sm={12} lg={5} >
+                            <Col sm={12} lg={5}>
                                 <WorldTable
                                     worldData={this.state.world}
                                     showStats={this.showStats}
                                     placeSelected={this.state.placeSelected}
+                                    current={
+                                        Object.values(this.state.option).length ?
+                                            this.state.option :
+                                            this.state.current
+                                    }
                                 />
+
                             </Col>
                             <Col sm={12} lg={7}>
-                                {/* <h1>{`${this.state.option.country || "World"}'s stats`} </h1> */}
+                                <h1>World map </h1>
                                 <Map
                                     worldData={this.state.world}
                                     showStats={this.showStats}
                                     mode={this.state.mode}
+                                    placeSelected={this.state.placeSelected}
                                     current={
                                         Object.values(this.state.option).length ?
                                             this.state.option :
                                             this.state.current
                                     }
                                     summary={
-                                        this.state.option.country ?
+                                        this.state.option.country && this.state.placeSelected ?
                                             this.state.option.summary :
                                             this.state.summary
                                     }
