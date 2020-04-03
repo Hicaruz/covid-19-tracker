@@ -14,7 +14,8 @@ class Dashboard extends Component {
             world: [],
             current: {},
             option: {},
-            mode: "mortality"
+            mode: "mortality",
+            placeSelected: false
         }
         this.showStats = this.showStats.bind(this)
 
@@ -41,7 +42,8 @@ class Dashboard extends Component {
                 country,
                 latitude: coordinates.latitude,
                 longitude: coordinates.longitude
-            }
+            },
+            placeSelected: !(this.state.option.country === country && this.state.placeSelected)
         })
     }
     render() {
@@ -54,7 +56,9 @@ class Dashboard extends Component {
                             <Col sm={12} lg={5} >
                                 <WorldTable
                                     worldData={this.state.world}
-                                    showStats={this.showStats} />
+                                    showStats={this.showStats}
+                                    placeSelected={this.state.placeSelected}
+                                />
                             </Col>
                             <Col sm={12} lg={7}>
                                 {/* <h1>{`${this.state.option.country || "World"}'s stats`} </h1> */}
