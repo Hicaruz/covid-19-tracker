@@ -53,14 +53,14 @@ const Stack = ({ format, width }) => {
         </AreaChart>
     )
 }
-const TimeLine = ({ format, width }) => {
+const TimeLine = ({ data }) => {
     return (
         <ComposedChart
             syncId="chart"
-            width={width}
+            width={400}
             height={400}
             data={
-                format
+                data
                     .sort((a, b) => {
                         const [aday, amonth, ayear] = a.date.split("/")
                         const [bday, bmonth, byear] = b.date.split("/")
@@ -71,13 +71,13 @@ const TimeLine = ({ format, width }) => {
             }
             margin={{ top: 60, right: 30, left: 30, bottom: 0 }}>
 
-            <YAxis stroke="#FFF" />
-            <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
-            <XAxis dataKey="date" stroke="#FFF" />
+            <YAxis stroke="#000" />
+            <YAxis stroke="#000" orientation="right" yAxisId="right" />
+            <XAxis dataKey="date" stroke="#000" />
             <Tooltip labelStyle={{ color: "#000" }} />
             <Legend />
             <ReferenceLine x="deaths" stroke="red" />
-            <ReferenceLine y={format.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
+            <ReferenceLine y={data.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
             <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
             <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="#28a745" />
             <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />

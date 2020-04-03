@@ -5,7 +5,6 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { WorldTable } from './layout'
 import logo from '../logo.svg'
 import Map from './map'
-import { flags } from './flags'
 
 class Dashboard extends Component {
     constructor() {
@@ -22,18 +21,27 @@ class Dashboard extends Component {
 
     }
     async componentDidMount() {
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-            const { latitude, longitude } = coords;
-            const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
-            this.setState({ current: { latitude, longitude, country, country_code: flags[country] || "XX" } });
-        });
+
         const { summary, world } = await getData()
         // if(Object.values(this.state.current).length){
         //     const current = [...world].filter(location => location.country === current.country)
 
         // }
-        console.log(world)
         this.setState({ summary: Object.entries(summary), world })
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+            const { latitude, longitude } = coords;
+
+            const { name: country } = crg.country_reverse_geocoding().get_country(latitude, longitude);
+            const current = [...this.state.world].filter(l => l.country === country).shift()
+            this.setState({
+                current: {
+                    ...current,
+                    latitude,
+                    longitude,
+                    country
+                }
+            });
+        });
     }
     showStats(location) {
         console.log(location)

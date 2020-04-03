@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Container, Row, InputGroup, FormControl, Col, Card } from 'react-bootstrap'
 import { MdKeyboardArrowRight } from "react-icons/md";
-
+import { TimeLine } from './charts'
 
 const DataTable = (props) => {
   const columns = ["country"]
@@ -62,15 +62,41 @@ const DataTable = (props) => {
     </div>
   )
 }
-const Country = ({current}) => {
+const Country = ({ current }) => {
   console.log(current)
+  const { confirmed, deaths, recovered } = current.timelines
+  const data = []
+  const dates = [...new Set(
+    Object.keys(confirmed.timeline),
+    Object.keys(deaths.timeline),
+    Object.keys(recovered.timeline)
+  )]
+  dates
+    .reverse()
+    .forEach(date => data.push({
+      date,
+      infected: confirmed.timeline[date] || 0,
+      deaths: deaths.timeline[date] || 0,
+      recovered: recovered.timeline[date] || 0
+    }))
   return (
-    <Card>
-      <Card.Img variant="top" src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()} />
+
+    <Card style={{ width: '25rem' }}>
+      <Card.Img
+        variant="top"
+        src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()}
+
+      />
       <Card.Body>
         <Card.Title>{current.country}</Card.Title>
-
+        <Card.Text>
+          placeholder
+        </Card.Text>
+        <TimeLine
+          data={data.filter(({ infected }) => infected > 0)}
+        />
       </Card.Body>
+
     </Card>
   )
 }
@@ -120,7 +146,7 @@ class WorldTable extends Component {
             />
           </InputGroup>
         </Row>
-        <Row>
+        <Row className="worldTable">
           <Col lg={5}>
             <DataTable
               order={this.state.order}
@@ -135,7 +161,7 @@ class WorldTable extends Component {
           <Col lg={7} className="text-black">
             {
               this.props.current.country ?
-                <Country 
+                <Country
                   current={this.props.current}
                 /> :
                 <World />
