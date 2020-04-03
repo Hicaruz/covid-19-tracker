@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { colors } from './colors'
-import { Row, Card, Form } from 'react-bootstrap'
 import GoogleMap from './google-map'
 class Map extends Component {
 
@@ -14,39 +13,18 @@ class Map extends Component {
         }
     }
     render() {
-        const _colors = {
-            confirmed: "warning",
-            deaths: "danger",
-            recovered: "success"
-        }
+        // const _colors = {
+        //     confirmed: "warning",
+        //     deaths: "danger",
+        //     recovered: "success"
+        // }
         return (
             <>
-                <Form>
-                    <Form.Check
-                        type="switch"
-                        id="custom-switch"
-                        label="switch map"
-                        onClick={() => this.setState({ map: !this.state.map })}
-                    />
-                </Form>
-
                 {
                     this.state.map ?
                         <GoogleMap /> :
                         <>
-                            <Row className="cards">
-                                {
-                                    this.props.summary.map(([title, value], key) =>
-                                        <Card
-                                            key={key}
-                                            bg="dark"
-                                            text={_colors[title]}
-                                            className="text-center p-3">
-                                            <h1>{title}</h1>
-                                            <h4 className="text-white">{value}</h4>
-                                        </Card>)
-                                }
-                            </Row>
+
                             <ComposableMap width={window.screen.width / 2}>
                                 <Geographies geography={this.state.geoUrl} >
                                     {({ geographies }) =>
@@ -82,7 +60,7 @@ class Map extends Component {
                                     }
                                 </Geographies>
                                 {
-                                    this.props.current ?
+                                    this.props.current && this.props.placeSelected ?
                                         <Marker coordinates={[this.props.current.longitude, this.props.current.latitude]}>
                                             <g
                                                 fill="none"

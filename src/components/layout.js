@@ -1,29 +1,84 @@
 import React, { Component } from 'react'
-import { Table, Container, Row, InputGroup, FormControl } from 'react-bootstrap'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardArrowRight } from "react-icons/md";
+import { Table, Container, Row, InputGroup, FormControl, Col, Card } from 'react-bootstrap'
+import { MdKeyboardArrowRight } from "react-icons/md";
 
-class Card extends Component {
 
-  render() {
-    return (
-      <div className={`col-lg-${this.props.size <= 1 ? "12" : "4"} col-sm-12 col-xs-12`}>
-        <div className={`card text-${this.props.text} ${this.props.bg}`}>
-          <div className="card-body">
-            <h4 className="card-title">{this.props.country}{this.props.province ? `, ${this.props.province} ` : null} <img src={`https://www.countryflags.io/${this.props.flag}/flat/32.png`} alt="" />
-            </h4>
-            <p className="card-text"><span className="badge badge-warning">Confirmed</span>  : {this.props.confirmed}</p>
-            <p className="card-text"><span className="badge badge-danger">Deaths</span> : {this.props.deaths}</p>
-            <p className="card-text"><span className="badge badge-success">Recovered</span> : {this.props.recovered}</p>
-          </div>
-          <div className="card-footer">
-            <small style={{ fontSize: "20px" }}>last update: {(new Date(this.props.date)).toString().slice(0, 15)}</small>
-          </div>
-        </div>
-      </div>
-    )
-  }
+const DataTable = (props) => {
+  const columns = ["country"]
+
+  return (
+    <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
+      <Table variant="light" size="sm">
+        <thead>
+          <tr className="thead active">
+            <th>#</th>
+            {
+              columns.map((title, key) =>
+                <th
+                  key={key}
+                  onClick={() => this.sortBy(title)}
+                  className={title}>
+                  {title}
+                </th>
+              )
+            }
+          </tr>
+        </thead>
+        <tbody >
+          {
+            props.worldData
+              .filter(location => props.checkInput(location))
+              .map(location => {
+                return {
+                  ...location,
+                  ...location.latest
+                }
+              })
+              .sort((a, b) => props.orderBy(a, b))
+              .map((location, key) => {
+                return (
+                  <tr
+                    key={key}
+                    className="active"
+                    onClick={() => props.showStats(location.country)}>
+                    <td>{key + 1}</td>
+                    <td className="icon">
+                      <span>
+                        <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
+                        {' '}
+                        {location.country}
+                      </span>
+                      <span className="">
+                        <MdKeyboardArrowRight />
+                      </span>
+                    </td>
+
+                  </tr>
+                )
+              })
+          }
+        </tbody>
+      </Table>
+    </div>
+  )
 }
+const Country = ({current}) => {
+  console.log(current)
+  return (
+    <Card>
+      <Card.Img variant="top" src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()} />
+      <Card.Body>
+        <Card.Title>{current.country}</Card.Title>
 
+      </Card.Body>
+    </Card>
+  )
+}
+const World = () => {
+  return (
+    null
+  )
+}
 class WorldTable extends Component {
   constructor() {
     super()
@@ -54,7 +109,6 @@ class WorldTable extends Component {
   }
 
   render() {
-    const columns = ["country"]
     return (
       <Container >
         <Row className="list">
@@ -66,69 +120,31 @@ class WorldTable extends Component {
             />
           </InputGroup>
         </Row>
-        <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
-          <Table variant="light" responsive size="sm" style={{ width: this.props.placeSelected ? "50%" : "100%" }}>
-            <thead>
-              <tr className="thead">
-                <th className="active">#</th>
-                {
-                  columns.map((title, key) =>
-                    <th
-                      key={key}
-                      onClick={() => this.sortBy(title)}
-                      className={title}>
-                      {title}
-                      {
-                        this.state.order ?
-                          <MdKeyboardArrowDown className={this.state.sortBy === title ? "" : "d-display"} /> :
-                          <MdKeyboardArrowUp className={this.state.sortBy === title ? "" : "d-display"} />
-                      }
-                    </th>
-                  )
-                }
-              </tr>
-            </thead>
-            <tbody >
-              {/* <tr>
-              <td>dummie</td>
-            </tr> */}
-              {
-                this.props.worldData
-                  .filter(location => this.checkInput(location))
-                  .map(location => {
-                    return {
-                      ...location,
-                      ...location.latest
-                    }
-                  })
-                  .sort((a, b) => this.orderBy(a, b))
-                  .map((location, key) => {
-                    return (
-                      <tr
-                        key={key}
-                        className="active"
-                        onClick={() => this.props.showStats(location.country)}>
-                        <td>{key + 1}</td>
-                        <td className="icon">
-                          <span>
-                            <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
-                            {' '}
-                            {location.country}
-                          </span>
-                          <span className="">
-                            <MdKeyboardArrowRight />
-                          </span>
-                        </td>
-                        {/* <td className="confirmed">{location.confirmed}</td>
-                        <td className="deaths">{location.deaths}</td>
-                        <td className="recovered">{location.recovered}</td> */}
-                      </tr>
-                    )
-                  })
-              }
-            </tbody>
-          </Table>
-        </div>
+        <Row>
+          <Col lg={5}>
+            <DataTable
+              order={this.state.order}
+              sortBy={this.sortBy.bind(this)}
+              showStats={this.props.showStats}
+              worldData={this.props.worldData}
+              checkInput={this.checkInput.bind(this)}
+              orderBy={this.orderBy.bind(this)}
+            />
+          </Col>
+
+          <Col lg={7} className="text-black">
+            {
+              this.props.current.country ?
+                <Country 
+                  current={this.props.current}
+                /> :
+                <World />
+            }
+
+          </Col>
+
+
+        </Row>
       </Container>
     )
   }
