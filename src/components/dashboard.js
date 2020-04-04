@@ -58,6 +58,10 @@ class Dashboard extends Component {
             placeSelected: !(this.state.option.country === country && this.state.placeSelected)
         })
     }
+    handleChange({ target }) {
+        console.log(target.value)
+        this.setState({ mode: target.value })
+    }
     render() {
 
         return (
@@ -67,6 +71,8 @@ class Dashboard extends Component {
                         <Row>
                             <Col sm={12} lg={5}>
                                 <WorldTable
+                                    handleChange={this.handleChange.bind(this)}
+                                    mode={this.state.mode}
                                     worldData={this.state.world}
                                     showStats={this.showStats}
                                     placeSelected={this.state.placeSelected}

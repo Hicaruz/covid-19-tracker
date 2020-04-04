@@ -1,27 +1,33 @@
 import React, { Component } from 'react'
-import { Table, Container, Row, InputGroup, FormControl, Col, Card } from 'react-bootstrap'
+import { Table, Container, Row, InputGroup, FormControl, Col, Card, Form } from 'react-bootstrap'
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { TimeLine } from './charts'
 
 const DataTable = (props) => {
-  const columns = ["country"]
-
+  const type = {
+    mortality: "deaths",
+    recovered: "recovered",
+    infectivity: "confirmed"
+  }
   return (
     <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
       <Table variant="light" size="sm">
         <thead>
-          <tr className="thead active">
-            <th>#</th>
-            {
-              columns.map((title, key) =>
-                <th
-                  key={key}
-                  onClick={() => this.sortBy(title)}
-                  className={title}>
-                  {title}
-                </th>
-              )
-            }
+          <tr className="thead">
+            <th>
+              <Form>
+                <Form.Group controlId="exampleForm.SelectCustom">
+                  <Form.Label>Sort by</Form.Label>
+                  <Form.Control as="select" custom
+                    onChange={props.handleChange}
+                  >
+                    <option value="mortality">mortality</option>
+                    <option value="infectivity">infectivity</option>
+                    <option value="recovered">recovered</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </th>
           </tr>
         </thead>
         <tbody >
@@ -41,14 +47,15 @@ const DataTable = (props) => {
                     key={key}
                     className="active"
                     onClick={() => props.showStats(location.country)}>
-                    <td>{key + 1}</td>
                     <td className="icon">
                       <span>
                         <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
                         {' '}
                         {location.country}
+                        {' '}
                       </span>
                       <span className="">
+                        <small className="small-value">{location.latest[type[props.mode]]}</small>
                         <MdKeyboardArrowRight />
                       </span>
                     </td>
@@ -74,30 +81,34 @@ const Country = ({ current }) => {
   dates
     .reverse()
     .forEach(date => data.push({
-      date,
+      date: date.slice(0, 10).split("-").reverse().join("/"),
       infected: confirmed.timeline[date] || 0,
       deaths: deaths.timeline[date] || 0,
       recovered: recovered.timeline[date] || 0
     }))
+  console.log(data)
   return (
+    <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }}>
+      <Card style={{ width: window.screen.width * 0.25 }}>
+        <Card.Img
+          variant="top"
+          className="card-image"
+          src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()}
 
-    <Card style={{ width: '25rem' }}>
-      <Card.Img
-        variant="top"
-        src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()}
-
-      />
-      <Card.Body>
-        <Card.Title>{current.country}</Card.Title>
-        <Card.Text>
-          placeholder
-        </Card.Text>
-        <TimeLine
-          data={data.filter(({ infected }) => infected > 0)}
         />
-      </Card.Body>
+        <Card.Body>
+          <Card.Title><h1>{current.country}</h1></Card.Title>
+          <Card.Text>
+            {"{{country-description}}"}
+        </Card.Text>
+          <TimeLine
+            data={data.filter(({ infected }) => infected > 0)}
+          />
+        </Card.Body>
 
-    </Card>
+      </Card>
+
+    </div>
   )
 }
 const World = () => {
@@ -109,7 +120,7 @@ class WorldTable extends Component {
   constructor() {
     super()
     this.state = {
-      sortBy: "country",
+      sortBy: "deaths",
       order: false,
       query: "",
     }
@@ -121,9 +132,14 @@ class WorldTable extends Component {
     this.setState({ sortBy })
   }
   orderBy(a, b) {
+    const type = {
+      mortality: "deaths",
+      recovered: "recovered",
+      infectivity: "confirmed"
+    }
     return this.state.order ?
-      a[this.state.sortBy] - b[this.state.sortBy] :
-      b[this.state.sortBy] - a[this.state.sortBy]
+      a[type[this.props.mode]] - b[type[this.props.mode]] :
+      b[type[this.props.mode]] - a[type[this.props.mode]]
   }
   queryOnChange({ target }) {
     this.setState({ query: target.value })
@@ -149,6 +165,8 @@ class WorldTable extends Component {
         <Row className="worldTable">
           <Col lg={5}>
             <DataTable
+              handleChange={this.props.handleChange}
+              mode={this.props.mode}
               order={this.state.order}
               sortBy={this.sortBy.bind(this)}
               showStats={this.props.showStats}
