@@ -1,4 +1,4 @@
-import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, AreaChart, CartesianGrid } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, ReferenceLine, Legend, ComposedChart, Area, Bar, AreaChart, CartesianGrid, ResponsiveContainer } from 'recharts'
 import React from 'react'
 
 const Stack = ({ format, width }) => {
@@ -45,7 +45,7 @@ const Stack = ({ format, width }) => {
             <XAxis dataKey="date" stroke="#FFF" />
             <YAxis tickFormatter={toPercent} stroke="#FFF" />
             <YAxis stroke="#FFF" orientation="right" yAxisId="right" />
-            <CartesianGrid/>
+            <CartesianGrid />
             <Tooltip content={renderTooltipContent} />
             <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" fillOpacity={1} />
             <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" fillOpacity={1} />
@@ -55,34 +55,38 @@ const Stack = ({ format, width }) => {
 }
 const TimeLine = ({ data }) => {
     return (
-        <ComposedChart
-            syncId="chart"
-            width={400}
-            height={400}
-            data={
-                data
-                    .sort((a, b) => {
-                        const [aday, amonth, ayear] = a.date.split("/")
-                        const [bday, bmonth, byear] = b.date.split("/")
-                        const da = new Date(ayear, amonth, aday)
-                        const db = new Date(byear, bmonth, bday)
-                        return da > db ? 1 : -1
-                    })
-            }
-            margin={{ top: 60, right: 30, left: 30, bottom: 0 }}>
+        <ResponsiveContainer
+            width={window.screen.width * 0.25}
+            height={200}
+            className="ResponsiveContainer"
+            >
+            <ComposedChart
+                syncId="chart"
+                data={
+                    data
+                        .sort((a, b) => {
+                            const [aday, amonth, ayear] = a.date.split("/")
+                            const [bday, bmonth, byear] = b.date.split("/")
+                            const da = new Date(ayear, amonth, aday)
+                            const db = new Date(byear, bmonth, bday)
+                            return da > db ? 1 : -1
+                        })
+                }
+                margin={{ top: 0, right: 40, left: -20, bottom: 0 }}>
 
-            <YAxis stroke="#000" />
-            <YAxis stroke="#000" orientation="right" yAxisId="right" />
-            <XAxis dataKey="date" stroke="#000" />
-            <Tooltip labelStyle={{ color: "#000" }} />
-            <Legend />
-            <ReferenceLine x="deaths" stroke="red" />
-            <ReferenceLine y={data.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
-            <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
-            <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="#28a745" />
-            <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
+                <YAxis stroke="#000" />
+                <YAxis stroke="#000" orientation="right" yAxisId="right" />
+                <XAxis dataKey="date" stroke="transparent" />
+                <Tooltip labelStyle={{ color: "#000", fontSize: "15px" }} />
+                <Legend />
+                <ReferenceLine x="deaths" stroke="red" />
+                <ReferenceLine y={data.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} />
+                <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
+                <Area type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="#28a745" />
+                <Bar type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
 
-        </ComposedChart>
+            </ComposedChart>
+        </ResponsiveContainer>
     )
 }
 

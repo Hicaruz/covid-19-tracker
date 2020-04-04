@@ -144,3 +144,21 @@ button {
   display: flex;
   justify-content: space-between;
 }
+.worldTable{
+  padding-left: 0rem;
+}
+.card-image{
+  width: 70%;
+  padding-top: 20px;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+}
+.ResponsiveContainer{
+  font-size: 15px;
+}
+.small-value{
+
+  justify-content: end;
+  color: #7c7c7c;
+}
