@@ -38,7 +38,7 @@ class Header extends Component {
                 <Button variant="success">#StayAtHome</Button>{' '}
                 {
                     this.state.current ?
-                        <img src={`https://www.countryflags.io/${flags[this.state.current.country]}/flat/${window.screen.height > window.screen.width ? "32" : "64"}.png`} alt="" /> :
+                        <img src={`https://www.countryflags.io/${flags[this.state.current.country]}/flat/64.png`} alt="" /> :
                         null
                 }
             </Navbar>

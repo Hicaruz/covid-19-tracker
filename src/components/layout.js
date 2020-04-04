@@ -10,7 +10,7 @@ const DataTable = (props) => {
     infectivity: "confirmed"
   }
   return (
-    <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }} className="table">
+    <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }} className="table">
       <Table variant="light" size="sm">
         <thead>
           <tr className="thead">
@@ -70,7 +70,6 @@ const DataTable = (props) => {
   )
 }
 const Country = ({ current }) => {
-  console.log(current)
   const { confirmed, deaths, recovered } = current.timelines
   const data = []
   const dates = [...new Set(
@@ -86,9 +85,8 @@ const Country = ({ current }) => {
       deaths: deaths.timeline[date] || 0,
       recovered: recovered.timeline[date] || 0
     }))
-  console.log(data)
   return (
-    <div style={{ height: (window.screen.height / 1.4), overflow: "auto" }}>
+    <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }}>
       <Card style={{ width: window.screen.width * 0.25 }}>
         <Card.Img
           variant="top"
@@ -100,12 +98,11 @@ const Country = ({ current }) => {
           <Card.Title><h1>{current.country}</h1></Card.Title>
           <Card.Text>
             {"{{country-description}}"}
-        </Card.Text>
+          </Card.Text>
           <TimeLine
             data={data.filter(({ infected }) => infected > 0)}
           />
         </Card.Body>
-
       </Card>
 
     </div>

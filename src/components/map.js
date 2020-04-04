@@ -26,7 +26,7 @@ class Map extends Component {
                     <Geographies geography={this.state.geoUrl} >
                         {({ geographies }) =>
                             geographies.map(geo => {
-                                const { ISO_A2: code } = geo.properties
+                                const { ISO_A2: code, POP_EST: population } = geo.properties
                                 const current = [...this.props.worldData].filter(({ country_code }) => country_code === code).shift()
                                 if (!current) {
                                     return <Geography
@@ -37,7 +37,7 @@ class Map extends Component {
                                 }
                                 const latest = Object.keys(current || {}).length ? current.latest : { confirmed: 0, deaths: 0, recovered: 0 }
                                 const sortData = {
-                                    infectivity: (latest.confirmed / (current.population ? current.population : 1)) * 100,
+                                    infectivity: (latest.confirmed / population) * 100,
                                     mortality: (latest.deaths / latest.confirmed) * 1000,
                                     recovered: (latest.recovered / latest.confirmed) * 100
                                 }
@@ -61,7 +61,6 @@ class Map extends Component {
                             <Marker coordinates={[this.props.current.longitude, this.props.current.latitude]}>
                                 <g
                                     fill="none"
-
                                     stroke="#FF5533"
                                     strokeWidth="2"
                                     strokeLinecap="round"

@@ -7,8 +7,8 @@ import logo from '../logo.svg'
 import Map from './map'
 
 class Dashboard extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             summary: {},
             world: [],
@@ -18,7 +18,6 @@ class Dashboard extends Component {
             placeSelected: false
         }
         this.showStats = this.showStats.bind(this)
-
     }
     async componentDidMount() {
 
@@ -44,7 +43,6 @@ class Dashboard extends Component {
         });
     }
     showStats(location) {
-        console.log(location)
         const current = [...this.state.world].filter(l => l.country === location).shift()
         const { country, coordinates, latest } = current
         this.setState({
@@ -59,7 +57,6 @@ class Dashboard extends Component {
         })
     }
     handleChange({ target }) {
-        console.log(target.value)
         this.setState({ mode: target.value })
     }
     render() {

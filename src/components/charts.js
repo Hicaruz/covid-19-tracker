@@ -72,7 +72,7 @@ const TimeLine = ({ data }) => {
                             return da > db ? 1 : -1
                         })
                 }
-                margin={{ top: 0, right: 40, left: -20, bottom: 0 }}>
+                margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
 
                 <YAxis stroke="#000" />
                 <YAxis stroke="#000" orientation="right" yAxisId="right" />
