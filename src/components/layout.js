@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Container, Row, InputGroup, FormControl, Col, Card, Form } from 'react-bootstrap'
+import { Table, Container, Row, InputGroup, FormControl, Col, Card, Form, Accordion, Button } from 'react-bootstrap'
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { TimeLine } from './charts'
 
@@ -113,6 +113,54 @@ const World = () => {
     null
   )
 }
+const AccordionWorld = props => {
+  return (
+    <>
+      <div className="center">
+        <Form>
+          <Form.Group controlId="exampleForm.SelectCustom">
+            <Form.Label>Sort by</Form.Label>
+            <Form.Control as="select" custom
+              onChange={props.handleChange}
+            >
+              <option value="mortality">mortality</option>
+              <option value="infectivity">infectivity</option>
+              <option value="recovered">recovered</option>
+            </Form.Control>
+          </Form.Group>
+        </Form>
+      </div>
+
+      <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }} className="table">
+
+        <Accordion>
+          {
+            props.worldData
+              .filter(location => props.checkInput(location))
+              .map(location => {
+                return {
+                  ...location,
+                  ...location.latest
+                }
+              })
+              .sort((a, b) => props.orderBy(a, b))
+              .map((location, key) =>
+                <Card>
+                  <Card.Header>
+                    <Accordion.Toggle as={Card.Header} eventKey="0">
+                      Click me!
+                  </Accordion.Toggle>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="0">
+                    <Card.Body>Hello! I'm the body</Card.Body>
+                  </Accordion.Collapse>
+                </Card>)
+          }
+        </Accordion>
+      </div>
+    </>
+  )
+}
 class WorldTable extends Component {
   constructor() {
     super()
@@ -159,33 +207,45 @@ class WorldTable extends Component {
             />
           </InputGroup>
         </Row>
-        <Row className="worldTable">
-          <Col lg={5}>
-            <DataTable
-              handleChange={this.props.handleChange}
-              mode={this.props.mode}
-              order={this.state.order}
-              sortBy={this.sortBy.bind(this)}
-              showStats={this.props.showStats}
-              worldData={this.props.worldData}
-              checkInput={this.checkInput.bind(this)}
-              orderBy={this.orderBy.bind(this)}
-            />
-          </Col>
+        {
+          window.screen.width > window.screen.height ?
+            <Row className="worldTable">
+              <Col lg={5}>
+                <DataTable
+                  handleChange={this.props.handleChange}
+                  mode={this.props.mode}
+                  order={this.state.order}
+                  sortBy={this.sortBy.bind(this)}
+                  showStats={this.props.showStats}
+                  worldData={this.props.worldData}
+                  checkInput={this.checkInput.bind(this)}
+                  orderBy={this.orderBy.bind(this)}
+                />
+              </Col>
 
-          <Col lg={7} className="text-black">
-            {
-              this.props.current.country ?
-                <Country
-                  current={this.props.current}
-                /> :
-                <World />
-            }
+              <Col lg={7} className="text-black">
+                {
+                  this.props.current.country ?
+                    <Country
+                      current={this.props.current}
+                    /> :
+                    <World />
+                }
 
-          </Col>
+              </Col>
 
 
-        </Row>
+            </Row>
+            :
+            <Row>
+              <AccordionWorld
+                worldData={this.props.worldData}
+                checkInput={this.checkInput.bind(this)}
+                orderBy={this.orderBy.bind(this)}
+              />
+            </Row>
+        }
+
       </Container>
     )
   }

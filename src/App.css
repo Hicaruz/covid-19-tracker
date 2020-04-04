@@ -162,3 +162,12 @@ button {
   justify-content: end;
   color: #7c7c7c;
 }
+.center{
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  margin: auto;
+}
