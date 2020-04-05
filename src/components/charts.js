@@ -56,7 +56,7 @@ const Stack = ({ format, width }) => {
 const TimeLine = ({ data }) => {
     return (
         <ResponsiveContainer
-            width={window.screen.width * 0.25}
+            width={300}
             height={200}
             className="ResponsiveContainer"
             >

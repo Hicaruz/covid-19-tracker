@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { Table, Container, Row, InputGroup, FormControl, Col, Card, Form, Accordion, Button } from 'react-bootstrap'
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { Table, Container, Row, InputGroup, FormControl, Col, Card, Form, Accordion } from 'react-bootstrap'
+import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { TimeLine } from './charts'
-
+const type = {
+  mortality: "deaths",
+  recovered: "recovered",
+  infectivity: "confirmed"
+}
 const DataTable = (props) => {
-  const type = {
-    mortality: "deaths",
-    recovered: "recovered",
-    infectivity: "confirmed"
-  }
+
   return (
     <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }} className="table">
       <Table variant="light" size="sm">
@@ -87,15 +87,15 @@ const Country = ({ current }) => {
     }))
   return (
     <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }}>
-      <Card style={{ width: window.screen.width * 0.25 }}>
-        <Card.Img
+      <Card>
+        {/* <Card.Img
           variant="top"
           className="card-image"
           src={`https://flagpedia.net/data/flags/normal/${current.country_code}.png`.toLowerCase()}
 
-        />
+        /> */}
         <Card.Body>
-          <Card.Title><h1>{current.country}</h1></Card.Title>
+          {/* <Card.Title><h1>{current.country}</h1></Card.Title> */}
           <Card.Text>
             {"{{country-description}}"}
           </Card.Text>
@@ -115,23 +115,25 @@ const World = () => {
 }
 const AccordionWorld = props => {
   return (
-    <>
+    <div>
       <div className="center">
         <Form>
           <Form.Group controlId="exampleForm.SelectCustom">
-            <Form.Label>Sort by</Form.Label>
-            <Form.Control as="select" custom
-              onChange={props.handleChange}
-            >
-              <option value="mortality">mortality</option>
-              <option value="infectivity">infectivity</option>
-              <option value="recovered">recovered</option>
-            </Form.Control>
+            <Row>
+              <Form.Label>Sort by</Form.Label>
+              <Form.Control as="select" custom
+                onChange={props.handleChange}
+              >
+                <option value="mortality">mortality</option>
+                <option value="infectivity">infectivity</option>
+                <option value="recovered">recovered</option>
+              </Form.Control>
+            </Row>
           </Form.Group>
         </Form>
       </div>
 
-      <div style={{ height: (window.screen.height / 1.45), overflow: "auto" }} className="table">
+      <div style={{ height: (window.screen.height / 2.3), overflow: "auto" }} className="table">
 
         <Accordion>
           {
@@ -145,20 +147,35 @@ const AccordionWorld = props => {
               })
               .sort((a, b) => props.orderBy(a, b))
               .map((location, key) =>
-                <Card>
+                <Card key={key}>
                   <Card.Header>
-                    <Accordion.Toggle as={Card.Header} eventKey="0">
-                      Click me!
-                  </Accordion.Toggle>
+                    <Accordion.Toggle as={Card.Header} eventKey={key}>
+                      <div lassName="icon">
+                        <span>
+                          <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
+                          {' '}
+                          {location.country}
+                          {' '}
+                        </span>
+                        <span>
+                          <small className="small-value">{location.latest[type[props.mode]]}</small>
+                          <MdKeyboardArrowDown />
+                        </span>
+                      </div>
+                    </Accordion.Toggle>
                   </Card.Header>
-                  <Accordion.Collapse eventKey="0">
-                    <Card.Body>Hello! I'm the body</Card.Body>
+                  <Accordion.Collapse eventKey={key}>
+                    <Card.Body>
+                      <Country
+                        current={location}
+                      />
+                    </Card.Body>
                   </Accordion.Collapse>
                 </Card>)
           }
         </Accordion>
       </div>
-    </>
+    </div>
   )
 }
 class WorldTable extends Component {
@@ -242,6 +259,8 @@ class WorldTable extends Component {
                 worldData={this.props.worldData}
                 checkInput={this.checkInput.bind(this)}
                 orderBy={this.orderBy.bind(this)}
+                mode={this.props.mode}
+
               />
             </Row>
         }

@@ -17,7 +17,7 @@ class Footer extends Component {
                         />{' '}
                     </Navbar.Brand>
                     <Button variant="warning">#BuyMeACoffee</Button>
-                    <Button variant="info" href="https://twitter.com/_Hicarus" target="_blank">Follow Me On Twitter</Button>
+                    <Button variant="info" href="https://twitter.com/_Hicarus" target="_blank">Follow me!</Button>
                 </Navbar>
             </footer>
         )
