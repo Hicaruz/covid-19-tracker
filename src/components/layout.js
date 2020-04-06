@@ -79,7 +79,7 @@ const Country = ({ current }) => {
   )]
   dates
     .reverse()
-    .forEach(date => data.push({
+    .forEach(date => date !== "latest" && data.push({
       date: date.slice(0, 10).split("-").reverse().join("/"),
       infected: confirmed.timeline[date] || 0,
       deaths: deaths.timeline[date] || 0,

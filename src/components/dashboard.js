@@ -60,7 +60,7 @@ class Dashboard extends Component {
         this.setState({ mode: target.value })
     }
     render() {
-
+        console.log([...this.state.world].filter(l => l.country === "United Kingdom"))
         return (
             <Container fluid style={{ margin: "20px 0 20px" }}>
                 {
