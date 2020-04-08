@@ -166,9 +166,12 @@ const AccordionWorld = props => {
                   </Card.Header>
                   <Accordion.Collapse eventKey={key}>
                     <Card.Body>
-                      <Country
+                      {/* <Country
                         current={location}
-                      />
+                      /> */}
+                      <h1>
+                        Loading...
+                      </h1>
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>)
