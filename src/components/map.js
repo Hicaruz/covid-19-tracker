@@ -22,7 +22,7 @@ class Map extends Component {
             <>
 
                 {/* <GoogleMap/> */}
-                <ComposableMap width={window.screen.width / 1.5}>
+                <ComposableMap>
                     <Geographies geography={this.state.geoUrl} >
                         {({ geographies }) =>
                             geographies.map(geo => {

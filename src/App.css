@@ -107,7 +107,7 @@ th, tr, tbody, thead {
 }
 
 .footer {
-  position: static;
+  position: fixed;
   bottom: 0;
   width: 100%;
 }
@@ -170,4 +170,21 @@ button {
   justify-self: center;
   justify-items: center;
   margin: auto;
+}
+.customized-tooltip-content{
+  background-color: #FFF; 
+  padding: 10px; 
+  border: #000; 
+  border-style: solid;
+  border-width: .1vh;
+}
+.bar{
+  border-radius: 100px;
+}
+.data-header{
+  margin-top: 5%;
+}
+
+.c-header{
+  margin: 10px 0 10px;
 }

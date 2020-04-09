@@ -1,4 +1,4 @@
-import { XAxis, YAxis, Tooltip, Line, Legend, ComposedChart, Area, AreaChart, CartesianGrid, ResponsiveContainer } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, Legend, ComposedChart, Area, AreaChart, ResponsiveContainer } from 'recharts'
 import React from 'react'
 
 const Stack = props => {
@@ -14,7 +14,7 @@ const Stack = props => {
         const total = payload.reduce((result, entry) => (result + entry.value), 0);
 
         return (
-            <div className="customized-tooltip-content container" style={{ backgroundColor: "#FFF", borderRadius: "15px", padding: "10px" }}>
+            <div className="customized-tooltip-content container">
                 {
                     payload.map((entry, index) => (
                         <p key={`item-${index}`} style={{ color: entry.color }}>
@@ -47,10 +47,10 @@ const Stack = props => {
                 >
             <XAxis dataKey="date" stroke="transparent" />
                 <YAxis tickFormatter={toPercent} stroke="#000" />
-                <Tooltip content={renderTooltipContent} labelStyle={{ color: "#000", fontSize: "15px" }} />
-                <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" fillOpacity={1} />
+                <Tooltip content={renderTooltipContent} labelStyle={{ color: "#000", fontSize: "20px" }} />
                 <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" fillOpacity={1} />
                 <Area type="monotone" dataKey="recovered" stackId="1" stroke="" fill="#28a745" fillOpacity={1} />
+                <Area type="monotone" dataKey="deaths" stackId="1" stroke="#dc3545" fill="#dc3545" fillOpacity={1} />
             </AreaChart>
         </ResponsiveContainer>
     )
@@ -69,7 +69,7 @@ const TimeLine = ({ data }) => {
 
                 <YAxis stroke="#000" />
                 <XAxis dataKey="date" stroke="transparent" />
-                <Tooltip labelStyle={{ color: "#000", fontSize: "15px" }} />
+                <Tooltip />
                 <Legend />
                 {/* <ReferenceLine y={data.reduce(({ infected: a }, { infected: b }) => a > b ? a : b, { infected: 0 })} stroke="red" style={{ color: "#FFF" }} /> */}
                 <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />

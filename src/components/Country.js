@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, ProgressBar } from 'react-bootstrap';
+import { Card, ProgressBar, Badge, Container, Col, Row, Image } from 'react-bootstrap';
 import { TimeLine, Stack } from './charts';
+
 export const Country = ({ current }) => {
     const { confirmed, deaths, recovered } = current.timelines;
     const data = [];
@@ -8,7 +9,7 @@ export const Country = ({ current }) => {
     dates
         .reverse()
         .forEach(date => date !== "latest" && data.push({
-            date: date,
+            date: date.slice(0, 10).split("-").reverse().join("/"),
             infected: confirmed.timeline[date] || 0,
             deaths: deaths.timeline[date] || 0,
             recovered: recovered.timeline[date] || 0
@@ -21,22 +22,67 @@ export const Country = ({ current }) => {
             const db = new Date(byear, bmonth, bday);
             return da > db ? 1 : -1;
         });
-    console.log(current);
-    return (<div style={{ height: (window.screen.height / 1.45), overflow: "auto" }}>
-        <Card>
-            <Card.Body>
-                <Card.Text>
-                    Latest report
-                    <ProgressBar>
-                        <ProgressBar variant="success" now={35} key={1} />
-                        <ProgressBar variant="warning" now={20} key={2} />
-                        <ProgressBar variant="danger" now={10} key={3} />
-                    </ProgressBar>
-                </Card.Text>
-                <TimeLine data={data.filter(({ infected }) => infected > 0)} />
-                <Stack data={data.filter(({ infected }) => infected > 0)} />
-            </Card.Body>
-        </Card>
+    const { latest } = current
+    const total = Object.values(latest).reduce((acc, cur) => acc + cur, 0)
+    console.log(current)
+    return (
+        <div style={{ height: (window.screen.height * 0.90), overflowY: "auto" }}>
+            <Card>
+                <Container>
+                    <Card.Body>
+                        <Card.Text>
+                            <div>
+                                <Badge variant="dark">Country</Badge>
+                                <h3>{current.country}</h3>
+                            </div>
+                            <ProgressBar >
+                                <ProgressBar
+                                    className="bar"
+                                    variant="success"
+                                    now={((latest.recovered / total) * 100).toFixed()}
+                                    key={1} />
+                                <ProgressBar
+                                    className="bar"
+                                    style={{ color: "#000" }}
+                                    variant="warning"
+                                    now={((latest.confirmed / total) * 100).toFixed()}
+                                    key={2} />
+                                <ProgressBar
+                                    className="bar"
+                                    variant="danger"
+                                    now={((latest.deaths / total) * 100).toFixed()}
+                                    key={3} />
+                            </ProgressBar>
+                            <Row className="c-header">
+                                <Col md={7}>
+                                    <Image src={`https://flagpedia.net/data/flags/normal/${current.country_code.toLowerCase()}.png`} fluid />
+                                </Col>
+                                <Col md={5} className="data-header">
+                                    <div>
+                                        <Badge variant="warning">confirmed</Badge>
+                                        {'\t'}<span>{latest.confirmed}</span>
+                                    </div>
+                                    <div>
+                                        <Badge variant="success">recovered</Badge>
+                                        {'\t'}<span>{latest.recovered}</span>
+                                    </div>
+                                    <div>
+                                        <Badge variant="danger">deaths</Badge>
+                                        {'\t'}<span>{latest.deaths}</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Card.Text>
+                        <Col className="card-header">
+                            <TimeLine data={data.filter(({ infected }) => infected > 0)} />
+                        </Col>
+                        <Col className="card-header">
+                            <Stack data={data.filter(({ infected }) => infected > 0)} />
+                        </Col>
+                        <small>Last update {current.last_updated.slice(0, 10).split("-").reverse().join("/")}</small>
+                    </Card.Body>
+                </Container>
 
-    </div>);
+            </Card>
+        </div>);
 };

@@ -60,13 +60,12 @@ class Dashboard extends Component {
         this.setState({ mode: target.value })
     }
     render() {
-        console.log([...this.state.world].filter(l => l.country === "United Kingdom"))
         return (
             <Container fluid style={{ margin: "20px 0 20px" }}>
                 {
                     this.state.world.length ?
                         <Row>
-                            <Col sm={12} lg={5}>
+                            <Col sm={12} lg={6}>
                                 <WorldTable
                                     handleChange={this.handleChange.bind(this)}
                                     mode={this.state.mode}
@@ -81,7 +80,7 @@ class Dashboard extends Component {
                                 />
 
                             </Col>
-                            <Col sm={12} lg={7}>
+                            <Col sm={12} lg={6}>
                                 <h1>World map </h1>
                                 <Map
                                     worldData={this.state.world}

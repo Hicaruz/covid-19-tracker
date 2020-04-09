@@ -1,14 +1,21 @@
 import React from 'react';
-import { Table, Row, Card, Form, Accordion } from 'react-bootstrap';
+import { Table, Row, Card, Form, Accordion, InputGroup, FormControl } from 'react-bootstrap';
 import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { type } from './layout';
 export const DataTable = (props) => {
-    return (<div style={{ height: (window.screen.height / 1.45), overflow: "auto" }} className="table">
+    return (<div style={{ height: (window.screen.height * 0.85), overflow: "auto" }} className="table">
         <Table variant="light" size="sm">
             <thead>
                 <tr className="thead">
                     <th>
                         <Form>
+                            <Form.Label>List of countries</Form.Label>
+                            <InputGroup className="mb-3">
+                                <FormControl
+                                    placeholder="Search a country"
+                                    onChange={props.onChange}
+                                />
+                            </InputGroup>
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>Sort by</Form.Label>
                                 <Form.Control as="select" custom onChange={props.handleChange}>

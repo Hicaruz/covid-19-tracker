@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Row, InputGroup, FormControl, Col } from 'react-bootstrap'
+import { Container, Row, Col, Card } from 'react-bootstrap'
 import { Country } from './Country';
 import { DataTable, World, AccordionWorld } from './DataTable';
 export const type = {
@@ -44,15 +44,6 @@ class WorldTable extends Component {
   render() {
     return (
       <Container >
-        <Row className="list">
-          <h1>List of countries</h1>
-          <InputGroup className="mb-3">
-            <FormControl
-              placeholder="Search a country"
-              onChange={this.queryOnChange.bind(this)}
-            />
-          </InputGroup>
-        </Row>
         {
           window.screen.width > window.screen.height ?
             <Row className="worldTable">
@@ -66,9 +57,10 @@ class WorldTable extends Component {
                   worldData={this.props.worldData}
                   checkInput={this.checkInput.bind(this)}
                   orderBy={this.orderBy.bind(this)}
+                  onChange={this.queryOnChange.bind(this)}
+
                 />
               </Col>
-
               <Col lg={7} className="text-black">
                 {
                   this.props.current.country ?
@@ -79,8 +71,6 @@ class WorldTable extends Component {
                 }
 
               </Col>
-
-
             </Row>
             :
             <Row>
