@@ -64,15 +64,57 @@ async function setup() {
                 timelines: {
                     confirmed: {
                         latest: current.latest.confirmed + latest.confirmed,
-                        timeline: { ...timelines.confirmed, ...current.timelines.confirmed.timeline}
+                        timeline: Object.keys(timelines.confirmed.timeline)
+                            .reduce((acc, date) => {
+                                const key = date.slice(0, 10).split("-").reverse().join("/")
+                                if (current.timelines.confirmed.timeline[date]) {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.confirmed.timeline[date] + current.timelines.confirmed.timeline[date]
+                                    }
+                                } else {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.confirmed.timeline[date]
+                                    }
+                                }
+                            }, {})
                     },
                     deaths: {
                         latest: current.latest.deaths + latest.deaths,
-                        timeline:{ ...timelines.deaths, ...current.timelines.deaths.timeline}
+                        timeline: Object.keys(timelines.deaths.timeline)
+                            .reduce((acc, date) => {
+                                const key = date.slice(0, 10).split("-").reverse().join("/")
+                                if (current.timelines.deaths.timeline[date]) {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.deaths.timeline[date] + current.timelines.deaths.timeline[date]
+                                    }
+                                } else {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.deaths.timeline[date]
+                                    }
+                                }
+                            }, {})
                     },
                     recovered: {
                         latest: current.latest.recovered + latest.recovered,
-                        timeline: { ...timelines.recovered, ...current.timelines.recovered.timeline}
+                        timeline: Object.keys(timelines.recovered.timeline)
+                            .reduce((acc, date) => {
+                                const key = date.slice(0, 10).split("-").reverse().join("/")
+                                if (current.timelines.recovered.timeline[date]) {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.recovered.timeline[date] + current.timelines.recovered.timeline[date]
+                                    }
+                                } else {
+                                    return {
+                                        ...acc,
+                                        [key]: timelines.recovered.timeline[date]
+                                    }
+                                }
+                            }, {})
                     }
                 }
 
