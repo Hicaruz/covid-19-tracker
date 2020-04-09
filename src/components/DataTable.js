@@ -48,7 +48,14 @@ export const DataTable = (props) => {
                                     {' '}
                                 </span>
                                 <span className="">
-                                    <small className="small-value">{location.latest[type[props.mode]]}</small>
+                                    <small className="small-value">
+                                        {
+                                            location.latest[type[props.mode]]
+                                                .toString()
+                                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                
+                                        }
+                                    </small>
                                     <MdKeyboardArrowRight />
                                 </span>
                             </td>
@@ -58,9 +65,6 @@ export const DataTable = (props) => {
             </tbody>
         </Table>
     </div>);
-};
-export const World = () => {
-    return (null);
 };
 export const AccordionWorld = props => {
     return (<div>
@@ -91,32 +95,33 @@ export const AccordionWorld = props => {
                         };
                     })
                     .sort((a, b) => props.orderBy(a, b))
-                    .map((location, key) => <Card key={key}>
-                        <Card.Header>
-                            <Accordion.Toggle as={Card.Header} eventKey={key}>
-                                <div lassName="icon">
-                                    <span>
-                                        <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
-                                        {' '}
-                                        {location.country}
-                                        {' '}
-                                    </span>
-                                    <span>
-                                        <small className="small-value">{location.latest[type[props.mode]]}</small>
-                                        <MdKeyboardArrowDown />
-                                    </span>
-                                </div>
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey={key}>
-                            <Card.Body>
+                    .map((location, key) =>
+                        <Card key={key}>
+                            <Card.Header>
+                                <Accordion.Toggle as={Card.Header} eventKey={key}>
+                                    <div lassName="icon">
+                                        <span>
+                                            <img src={`https://www.countryflags.io/${location.country_code}/flat/32.png`} alt="" />
+                                            {' '}
+                                            {location.country}
+                                            {' '}
+                                        </span>
+                                        <span>
+                                            <small className="small-value">{location.latest[type[props.mode]]}</small>
+                                            <MdKeyboardArrowDown />
+                                        </span>
+                                    </div>
+                                </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey={key}>
+                                <Card.Body>
 
-                                <h1>
-                                    Loading...
+                                    <h1>
+                                        Loading...
                       </h1>
-                            </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>)}
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>)}
             </Accordion>
         </div>
     </div>);

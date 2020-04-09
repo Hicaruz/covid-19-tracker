@@ -37,9 +37,9 @@ class Map extends Component {
                                 }
                                 const latest = Object.keys(current || {}).length ? current.latest : { confirmed: 0, deaths: 0, recovered: 0 }
                                 const sortData = {
-                                    infectivity: (latest.confirmed / population) * 100,
+                                    infectivity: (latest.confirmed / population) * 1000000,
                                     mortality: (latest.deaths / latest.confirmed) * 1000,
-                                    recovered: (latest.recovered / latest.confirmed) * 100
+                                    recovered: 100 - ((latest.recovered / (latest.confirmed + latest.deaths )) * 250)
                                 }
                                 const percent = sortData[this.props.mode]
                                 const hex = (isNaN(percent) ? 0 : percent).toFixed()

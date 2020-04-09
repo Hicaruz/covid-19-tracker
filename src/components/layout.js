@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { Country } from './Country';
-import { DataTable, World, AccordionWorld } from './DataTable';
+import { DataTable, AccordionWorld } from './DataTable';
+import { World } from "./World";
 export const type = {
   mortality: "deaths",
   recovered: "recovered",
@@ -23,11 +24,6 @@ class WorldTable extends Component {
     this.setState({ sortBy })
   }
   orderBy(a, b) {
-    const type = {
-      mortality: "deaths",
-      recovered: "recovered",
-      infectivity: "confirmed"
-    }
     return this.state.order ?
       a[type[this.props.mode]] - b[type[this.props.mode]] :
       b[type[this.props.mode]] - a[type[this.props.mode]]
@@ -63,11 +59,14 @@ class WorldTable extends Component {
               </Col>
               <Col lg={7} className="text-black">
                 {
-                  this.props.current.country ?
+                  this.props.placeSelected ?
                     <Country
                       current={this.props.current}
                     /> :
-                    <World />
+                    <World 
+                      world={this.props.worldData}
+                      summary={this.props.summary}
+                    />
                 }
 
               </Col>

@@ -1,19 +1,32 @@
+
 import React from 'react';
 import { Card, ProgressBar, Badge, Container, Col, Row, Image } from 'react-bootstrap';
 import { TimeLine, Stack } from './charts';
 
-export const Country = ({ current }) => {
-    const { confirmed, deaths, recovered } = current.timelines;
-    const data = [];
-    const dates = [...new Set(Object.keys(confirmed.timeline), Object.keys(deaths.timeline), Object.keys(recovered.timeline))];
-    dates
-        .reverse()
-        .forEach(date => date !== "latest" && data.push({
+export const World = ({ world, summary }) => {
+    const latest = summary.reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
+    const timeline = {
+        confirmed: world.map(({ timelines }) => timelines.confirmed.timeline),
+        deaths: world.map(({ timelines }) => timelines.deaths.timeline),
+        recovered: world.map(({ timelines }) => timelines.recovered.timeline)
+    }
+    const { confirmed, deaths, recovered } = timeline;
+
+    const all_timelines = [...confirmed, ...deaths, ...recovered]
+    const dates = [...all_timelines].reduce((_dates, current) => ([..._dates, Object.keys(current)]), []).flat()
+    const data = []
+    for (const date of [...new Set(dates)]) {
+        const infected = timeline.confirmed.filter(t => t[date]).map(v => v[date]).reduce((t, c) => t + c, 0)
+        const deaths = timeline.deaths.filter(t => t[date]).map(v => v[date]).reduce((t, c) => t + c, 0)
+        const recovered = timeline.recovered.filter(t => t[date]).map(v => v[date]).reduce((t, c) => t + c, 0)
+        data.push({
             date: date.slice(0, 10).split("-").reverse().join("/"),
-            infected: confirmed.timeline[date] || 0,
-            deaths: deaths.timeline[date] || 0,
-            recovered: recovered.timeline[date] || 0
-        }));
+            infected,
+            deaths,
+            recovered
+        })
+    }
+
     data
         .sort((a, b) => {
             const [aday, amonth, ayear] = a.date.split("/");
@@ -21,10 +34,9 @@ export const Country = ({ current }) => {
             const da = new Date(ayear, amonth, aday);
             const db = new Date(byear, bmonth, bday);
             return da > db ? 1 : -1;
-        });
-    const { latest } = current
+        })
+
     const total = Object.values(latest).reduce((acc, cur) => acc + cur, 0)
-    console.log(current)
     return (
         <div style={{ height: (window.screen.height * 0.90), overflowY: "auto" }}>
             <Card>
@@ -33,7 +45,7 @@ export const Country = ({ current }) => {
                         <Card.Text>
                             <div>
                                 <Badge variant="dark">Data</Badge>
-                                <h3>{current.country}</h3>
+                                <h3>World</h3>
                             </div>
                             <ProgressBar >
                                 <ProgressBar
@@ -55,7 +67,7 @@ export const Country = ({ current }) => {
                             </ProgressBar>
                             <Row className="c-header">
                                 <Col md={7}>
-                                    <Image src={`https://flagpedia.net/data/flags/normal/${current.country_code.toLowerCase()}.png`} fluid />
+                                    <Image src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fglossarissimo.files.wordpress.com%2F2017%2F05%2Fflags-of-the-world.jpg&f=1&nofb=1" fluid />
                                 </Col>
                                 <Col md={5} className="data-header">
                                     <div>
@@ -74,12 +86,18 @@ export const Country = ({ current }) => {
                             </Row>
                         </Card.Text>
                         <Col className="card-header">
-                            <TimeLine data={data.filter(({ infected }) => infected > 0)} />
+                            <TimeLine data={data} />
                         </Col>
                         <Col className="card-header">
-                            <Stack data={data.filter(({ infected }) => infected > 0)} />
+                            <Stack data={data} />
                         </Col>
-                        <small>Last update {current.last_updated.slice(0, 10).split("-").reverse().join("/")}</small>
+                        {/* <Col className="card-header">
+                            <TreemapGrahp data={world.map(location => ({
+                                name: location.country,
+                                size: location.latest.confirmed 
+                            }))} />
+                        </Col> */}
+                        <small>Last update {[...world].shift().last_updated.slice(0, 10).split("-").reverse().join("/")}</small>
                     </Card.Body>
                 </Container>
 

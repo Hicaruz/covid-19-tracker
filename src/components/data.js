@@ -43,7 +43,8 @@ async function setup() {
         recoveredTimeLine[country] = _location
     });
     const world = locations.map(l => mergeTimeLine(l, recoveredTimeLine[l.country] || recoveredTimeLine[l.country.replace(/ /g, "_")], "recovered"))
-    const summary = Object.values(world).reduce(({ confirmed, deaths, recovered }, { latest }) => {
+    const summary = Object.values(world)
+    .reduce(({ confirmed, deaths, recovered }, { latest }) => {
         return {
             confirmed: confirmed += latest.confirmed,
             deaths: deaths += latest.deaths,
@@ -66,16 +67,15 @@ async function setup() {
                         latest: current.latest.confirmed + latest.confirmed,
                         timeline: Object.keys(timelines.confirmed.timeline)
                             .reduce((acc, date) => {
-                                const key = date.slice(0, 10).split("-").reverse().join("/")
                                 if (current.timelines.confirmed.timeline[date]) {
                                     return {
                                         ...acc,
-                                        [key]: timelines.confirmed.timeline[date] + current.timelines.confirmed.timeline[date]
+                                        [date]: timelines.confirmed.timeline[date] + current.timelines.confirmed.timeline[date]
                                     }
                                 } else {
                                     return {
                                         ...acc,
-                                        [key]: timelines.confirmed.timeline[date]
+                                        [date]: timelines.confirmed.timeline[date]
                                     }
                                 }
                             }, {})
@@ -84,16 +84,15 @@ async function setup() {
                         latest: current.latest.deaths + latest.deaths,
                         timeline: Object.keys(timelines.deaths.timeline)
                             .reduce((acc, date) => {
-                                const key = date.slice(0, 10).split("-").reverse().join("/")
                                 if (current.timelines.deaths.timeline[date]) {
                                     return {
                                         ...acc,
-                                        [key]: timelines.deaths.timeline[date] + current.timelines.deaths.timeline[date]
+                                        [date]: timelines.deaths.timeline[date] + current.timelines.deaths.timeline[date]
                                     }
                                 } else {
                                     return {
                                         ...acc,
-                                        [key]: timelines.deaths.timeline[date]
+                                        [date]: timelines.deaths.timeline[date]
                                     }
                                 }
                             }, {})
@@ -102,16 +101,15 @@ async function setup() {
                         latest: current.latest.recovered + latest.recovered,
                         timeline: Object.keys(timelines.recovered.timeline)
                             .reduce((acc, date) => {
-                                const key = date.slice(0, 10).split("-").reverse().join("/")
                                 if (current.timelines.recovered.timeline[date]) {
                                     return {
                                         ...acc,
-                                        [key]: timelines.recovered.timeline[date] + current.timelines.recovered.timeline[date]
+                                        [date]: timelines.recovered.timeline[date] + current.timelines.recovered.timeline[date]
                                     }
                                 } else {
                                     return {
                                         ...acc,
-                                        [key]: timelines.recovered.timeline[date]
+                                        [date]: timelines.recovered.timeline[date]
                                     }
                                 }
                             }, {})

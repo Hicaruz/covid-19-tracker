@@ -1,4 +1,4 @@
-import { XAxis, YAxis, Tooltip, Line, Legend, ComposedChart, Area, AreaChart, ResponsiveContainer } from 'recharts'
+import { XAxis, YAxis, Tooltip, Line, Legend, ComposedChart, Area, AreaChart, ResponsiveContainer, CartesianGrid, Treemap } from 'recharts'
 import React from 'react'
 
 const Stack = props => {
@@ -47,6 +47,7 @@ const Stack = props => {
                 >
             <XAxis dataKey="date" stroke="transparent" />
                 <YAxis tickFormatter={toPercent} stroke="#000" />
+                <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip content={renderTooltipContent} labelStyle={{ color: "#000", fontSize: "20px" }} />
                 <Area type="monotone" dataKey="infected" stackId="1" stroke="#ffc107" fill="#ffc107" fillOpacity={1} />
                 <Area type="monotone" dataKey="recovered" stackId="1" stroke="" fill="#28a745" fillOpacity={1} />
@@ -75,10 +76,29 @@ const TimeLine = ({ data }) => {
                 <Line type="monotone" dataKey="infected" stroke="#ffc107" fillOpacity={1} fill="#ffc107" />
                 <Line type="monotone" dataKey="recovered" className="justify-content-center" stroke="#28a745" fillOpacity={1} fill="#28a745" />
                 <Line type="monotone" dataKey="deaths" stroke="#dc3545" fillOpacity={1} fill="#dc3545" />
+                <CartesianGrid strokeDasharray="3 3" />
 
             </ComposedChart>
         </ResponsiveContainer>
     )
 }
 
-export { TimeLine, Stack }
+const TreemapGrahp = ({ data }) => {
+    return (
+        <ResponsiveContainer
+            width="100%"
+            height={200}
+            className="ResponsiveContainer"
+        >
+            <Treemap
+                data={data}
+                dataKey="size"
+                ratio={4 / 3}
+                stroke="#fff"
+                fill="#8884d8"
+            />
+        </ResponsiveContainer>
+
+    )
+}
+export { TimeLine, Stack, TreemapGrahp }

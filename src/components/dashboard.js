@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import crg from 'country-reverse-geocoding'
 import getData from './data'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Badge } from 'react-bootstrap'
 import { WorldTable } from './layout'
 import logo from '../logo.svg'
 import Map from './map'
@@ -70,6 +70,7 @@ class Dashboard extends Component {
                                     handleChange={this.handleChange.bind(this)}
                                     mode={this.state.mode}
                                     worldData={this.state.world}
+                                    summary={this.state.summary}
                                     showStats={this.showStats}
                                     placeSelected={this.state.placeSelected}
                                     current={
@@ -81,7 +82,10 @@ class Dashboard extends Component {
 
                             </Col>
                             <Col sm={12} lg={6}>
-                                <h1>World map </h1>
+                                <Badge variant="info">
+                                    <h1>World map</h1>
+                                    <small>Colored by {this.state.mode}</small>
+                                </Badge>
                                 <Map
                                     worldData={this.state.world}
                                     showStats={this.showStats}
