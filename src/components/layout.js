@@ -63,7 +63,7 @@ class WorldTable extends Component {
                     <Country
                       current={this.props.current}
                     /> :
-                    <World 
+                    <World
                       world={this.props.worldData}
                       summary={this.props.summary}
                     />
@@ -78,7 +78,7 @@ class WorldTable extends Component {
                 checkInput={this.checkInput.bind(this)}
                 orderBy={this.orderBy.bind(this)}
                 mode={this.props.mode}
-
+                placeSelected={this.props.placeSelected}
               />
             </Row>
         }

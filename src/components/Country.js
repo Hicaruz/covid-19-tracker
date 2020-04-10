@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, ProgressBar, Badge, Container, Col, Row, Image } from 'react-bootstrap';
 import { TimeLine, Stack } from './charts';
 
-export const Country = ({ current }) => {
+export const Country = ({ current, isAccordion }) => {
     const { confirmed, deaths, recovered } = current.timelines;
     const data = [];
     const dates = [...new Set(Object.keys(confirmed.timeline), Object.keys(deaths.timeline), Object.keys(recovered.timeline))];
@@ -31,10 +31,15 @@ export const Country = ({ current }) => {
                 <Container>
                     <Card.Body>
                         <Card.Text>
-                            <div>
-                                <Badge variant="dark">Data</Badge>
-                                <h3>{current.country}</h3>
-                            </div>
+                            {
+                                !isAccordion ?
+                                    <div>
+                                        <Badge variant="dark">Data</Badge>
+                                        <h3>{current.country}</h3>
+                                    </div>
+                                    : null
+                            }
+
                             <ProgressBar >
                                 <ProgressBar
                                     className="bar"
@@ -55,21 +60,28 @@ export const Country = ({ current }) => {
                             </ProgressBar>
                             <Row className="c-header">
                                 <Col md={7}>
-                                    <Image src={`https://flagpedia.net/data/flags/normal/${current.country_code.toLowerCase()}.png`} fluid />
+                                    {
+                                        !isAccordion ?
+                                            <Image src={`https://flagpedia.net/data/flags/normal/${current.country_code.toLowerCase()}.png`} fluid />
+                                            : null
+                                    }
                                 </Col>
                                 <Col md={5} className="data-header">
-                                    <div>
-                                        <Badge variant="warning">confirmed</Badge>
-                                        {'\t'}<span>{latest.confirmed}</span>
-                                    </div>
-                                    <div>
-                                        <Badge variant="success">recovered</Badge>
-                                        {'\t'}<span>{latest.recovered}</span>
-                                    </div>
-                                    <div>
-                                        <Badge variant="danger">deaths</Badge>
-                                        {'\t'}<span>{latest.deaths}</span>
-                                    </div>
+                                    {
+                                        [
+                                            ["warning", "confirmed"],
+                                            ["success", "recovered"],
+                                            ["danger", "deaths"]
+                                        ].map(([variant, value], key) =>
+                                            <div key={key}>
+                                                <Badge variant={variant}>{value}</Badge>
+                                                {'\t'}
+                                                <span>
+                                                    {latest[value].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                </span>
+                                            </div>
+                                        )
+                                    }
                                 </Col>
                             </Row>
                         </Card.Text>

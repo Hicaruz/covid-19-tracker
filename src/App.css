@@ -191,9 +191,16 @@ button {
 .c-header {
   margin: 10px 0 10px;
 }
-.progress {
+/* .progress {
   background-image: linear-gradient(to right, #fff, #ffc107, #dc3545);
 }
 .progressbar{
   display: block;
+} */
+
+.select{
+  padding-top: 5%;
+}
+.accordion{
+  margin-top: -30px;
 }

@@ -48,7 +48,20 @@ export const World = ({ world, summary }) => {
                                 <h3>World</h3>
                             </div>
                             <ProgressBar >
-                                <ProgressBar
+                                {
+                                    [
+                                        ["success", "recovered"],
+                                        ["warning", "confirmed"],
+                                        ["danger", "deaths"]
+                                    ].map(([variant, value], key) =>
+                                        <ProgressBar
+                                            className="bar"
+                                            variant={variant}
+                                            now={((latest[value] / total) * 100).toFixed()}
+                                            key={key} />
+                                    )
+                                }
+                                {/* <ProgressBar
                                     className="bar"
                                     variant="success"
                                     now={((latest.recovered / total) * 100).toFixed()}
@@ -63,25 +76,28 @@ export const World = ({ world, summary }) => {
                                     className="bar"
                                     variant="danger"
                                     now={((latest.deaths / total) * 100).toFixed()}
-                                    key={3} />
+                                    key={3} /> */}
                             </ProgressBar>
                             <Row className="c-header">
                                 <Col md={7}>
                                     <Image src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fglossarissimo.files.wordpress.com%2F2017%2F05%2Fflags-of-the-world.jpg&f=1&nofb=1" fluid />
                                 </Col>
                                 <Col md={5} className="data-header">
-                                    <div>
-                                        <Badge variant="warning">confirmed</Badge>
-                                        {'\t'}<span>{latest.confirmed}</span>
-                                    </div>
-                                    <div>
-                                        <Badge variant="success">recovered</Badge>
-                                        {'\t'}<span>{latest.recovered}</span>
-                                    </div>
-                                    <div>
-                                        <Badge variant="danger">deaths</Badge>
-                                        {'\t'}<span>{latest.deaths}</span>
-                                    </div>
+                                    {
+                                        [
+                                            ["warning", "confirmed"],
+                                            ["success", "recovered"],
+                                            ["danger", "deaths"]
+                                        ].map(([variant, value], key) =>
+                                            <div key={key}>
+                                                <Badge variant={variant}>{value}</Badge>
+                                                {'\t'}
+                                                <span>
+                                                    {latest[value].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                </span>
+                                            </div>
+                                        )
+                                    }
                                 </Col>
                             </Row>
                         </Card.Text>
