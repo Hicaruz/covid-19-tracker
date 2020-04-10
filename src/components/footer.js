@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Navbar, Button } from 'react-bootstrap'
-import logo from '../logo.svg'
 class Footer extends Component {
 
     render() {
@@ -8,15 +7,9 @@ class Footer extends Component {
             <footer className="footer">
                 <Navbar bg="dark" variant="dark" className="justify-content-end">
                     <Navbar.Brand href="." >
-                        <img
-                            alt=""
-                            src={logo}
-                            width="30"
-                            height="30"
-                            className="d-inline-block align-top App-logo"
-                        />{' '}
+                    
                     </Navbar.Brand>
-                    <Button variant="warning">#BuyMeACoffee</Button>
+                    <Button variant="warning" href="https://paypal.me/Hicarus" target="_blank">#BuyMeACoffee</Button>
                     <Button variant="info" href="https://twitter.com/_Hicarus" target="_blank">Follow me!</Button>
                 </Navbar>
             </footer>

@@ -18,14 +18,12 @@ export const DataTable = (props) => {
                                 />
                             </InputGroup>
                             <Form.Group controlId="exampleForm.SelectCustom">
-                                <Row>
-                                    <Form.Label>Sort by</Form.Label>
-                                    <Form.Control as="select" custom onChange={props.handleChange}>
-                                        <option value="mortality">mortality</option>
-                                        <option value="infectivity">infectivity</option>
-                                        <option value="recovered">recovered</option>
-                                    </Form.Control>
-                                </Row>
+                                <Form.Label>Sort by</Form.Label>
+                                <Form.Control as="select" custom onChange={props.handleChange}>
+                                    <option value="mortality">mortality</option>
+                                    <option value="infectivity">infectivity</option>
+                                    <option value="recovered">recovered</option>
+                                </Form.Control>
                             </Form.Group>
                         </Form>
                     </th>
@@ -111,7 +109,7 @@ export const AccordionWorld = props => {
                                                 {' '}
                                             </span>
                                             <span>
-                                                <small className="small-value">{location.latest[type[props.mode]]}</small>
+                                                <small className="small-value">{location.latest[type[props.mode]].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</small>
                                                 <MdKeyboardArrowDown />
                                             </span>
                                         </div>
