@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { Country } from './Country';
-import { DataTable, AccordionWorld } from './DataTable';
+import { DataTable } from './DataTable';
+import { AccordionWorld } from "./AccordionWorld";
 import { World } from "./World";
 export const type = {
   mortality: "deaths",

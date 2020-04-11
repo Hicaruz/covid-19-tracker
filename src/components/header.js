@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import logo from '../logo.svg'
 import { Navbar, Button } from 'react-bootstrap'
 import crg from 'country-reverse-geocoding'
-import {flags} from './flags'
+import { flags } from './flags'
 /* <header className="App-header">
               <img src={logo} className="App-logo" alt="logo" />
               <h3>Covid-19 <em>  Tracker</em></h3>
@@ -32,13 +32,12 @@ class Header extends Component {
                         width="30"
                         height="30"
                         className="d-inline-block align-top App-logo"
-                    />{' '}
-                    <span>Tracker</span>
+                    />
                 </Navbar.Brand>
                 <Button variant="success">#StayAtHome</Button>{' '}
                 {
                     this.state.current ?
-                        <img src={`https://www.countryflags.io/${flags[this.state.current.country]}/flat/64.png`} alt="" /> :
+                        <img src={`https://www.countryflags.io/${flags[this.state.current.country]}/flat/${window.screen.width > window.screen.height ? "64" : "32"}.png`} alt="" /> :
                         null
                 }
             </Navbar>

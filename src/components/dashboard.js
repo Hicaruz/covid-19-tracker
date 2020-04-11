@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import crg from 'country-reverse-geocoding'
 import getData from './data'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
 import { WorldTable } from './layout'
 import logo from '../logo.svg'
 import Map from './map'
@@ -53,12 +53,16 @@ class Dashboard extends Component {
                 latitude: coordinates.latitude,
                 longitude: coordinates.longitude
             },
+            show: false,
             placeSelected: !(this.state.option.country === country && this.state.placeSelected)
         })
     }
     handleChange({ target }) {
         this.setState({ mode: target.value })
     }
+    handleClose = () => this.setState({show: false});
+    handleShow = () => this.setState({show: true});
+
     render() {
         return (
             <Container fluid style={{ margin: "20px 0 20px" }}>
@@ -85,6 +89,20 @@ class Dashboard extends Component {
 
                                         </Col>
                                         <Col sm={12} lg={6}>
+                                            <Modal show={this.state.show} onHide={this.handleClose}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>Modal heading</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={this.handleClose}>
+                                                        Close
+                                                    </Button>
+                                                    <Button variant="primary" onClick={this.handleClose}>
+                                                        Save Changes
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
                                             <h1>World map <small> Colored by {this.state.mode}</small></h1>
                                             <Map
                                                 worldData={this.state.world}
