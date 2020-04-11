@@ -74,10 +74,14 @@ class WorldTable extends Component {
             :
             <Row>
               <AccordionWorld
+                order={this.state.order}
+                handleChange={this.props.handleChange}
                 worldData={this.props.worldData}
                 checkInput={this.checkInput.bind(this)}
                 orderBy={this.orderBy.bind(this)}
                 mode={this.props.mode}
+                sortBy={this.sortBy.bind(this)}
+                onChange={this.queryOnChange.bind(this)}
                 placeSelected={this.props.placeSelected}
               />
             </Row>
