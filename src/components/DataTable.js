@@ -85,7 +85,7 @@ export const AccordionWorld = props => {
                     </Form>
                 </div>
             </Container>
-            <div style={{ height: (window.screen.height * 0.45), overflow: "auto" }} className="select">
+            <div style={{ height: (window.screen.height * 0.3), overflow: "auto" }} className="select">
 
                 <Accordion>
                     {props.worldData

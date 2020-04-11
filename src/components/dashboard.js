@@ -85,7 +85,7 @@ class Dashboard extends Component {
 
                                         </Col>
                                         <Col sm={12} lg={6}>
-                                            <h1>World map <small>Colored by {this.state.mode}</small></h1>
+                                            <h1>World map <small> Colored by {this.state.mode}</small></h1>
                                             <Map
                                                 worldData={this.state.world}
                                                 showStats={this.showStats}
