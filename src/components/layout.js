@@ -75,6 +75,7 @@ class WorldTable extends Component {
             :
             <Row>
               <AccordionWorld
+                handleShow={this.props.handleShow}
                 order={this.state.order}
                 handleChange={this.props.handleChange}
                 worldData={this.props.worldData}

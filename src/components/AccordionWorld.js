@@ -19,7 +19,7 @@ export const AccordionWorld = props => {
                                     </Form.Control>
                                 </Col>
                                 <Col xs={2}>
-                                    <Button variant="info">
+                                    <Button variant="info" onClick={props.handleShow}>
                                         <MdSearch/>
                                     </Button>
                                 </Col>

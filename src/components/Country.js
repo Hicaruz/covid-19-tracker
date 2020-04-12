@@ -24,7 +24,6 @@ export const Country = ({ current, isAccordion }) => {
         });
     const { latest } = current
     const total = Object.values(latest).reduce((acc, cur) => acc + cur, 0)
-    console.log(current)
     return (
         <div style={{ height: (window.screen.height * 0.90), overflowY: "auto" }}>
             <Card>

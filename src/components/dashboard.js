@@ -80,6 +80,7 @@ class Dashboard extends Component {
                                                 summary={this.state.summary}
                                                 showStats={this.showStats}
                                                 placeSelected={this.state.placeSelected}
+                                                handleShow={this.handleShow.bind(this)}
                                                 current={
                                                     Object.values(this.state.option).length ?
                                                         this.state.option :
@@ -93,13 +94,10 @@ class Dashboard extends Component {
                                                 <Modal.Header closeButton>
                                                     <Modal.Title>Modal heading</Modal.Title>
                                                 </Modal.Header>
-                                                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                                                <Modal.Body>Woohoo, im still working on whit D:!</Modal.Body>
                                                 <Modal.Footer>
                                                     <Button variant="secondary" onClick={this.handleClose}>
                                                         Close
-                                                    </Button>
-                                                    <Button variant="primary" onClick={this.handleClose}>
-                                                        Save Changes
                                                     </Button>
                                                 </Modal.Footer>
                                             </Modal>
