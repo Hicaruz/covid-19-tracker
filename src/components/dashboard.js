@@ -14,6 +14,7 @@ class Dashboard extends Component {
             world: [],
             current: {},
             option: {},
+            show: false,
             mode: "mortality",
             placeSelected: false
         }
@@ -60,8 +61,12 @@ class Dashboard extends Component {
     handleChange({ target }) {
         this.setState({ mode: target.value })
     }
-    handleClose = () => this.setState({show: false});
-    handleShow = () => this.setState({show: true});
+    handleClose = () => this.setState({ show: false });
+    handleShow = () => {
+        console.log("bruh")
+        this.setState({ show: true });
+
+    }
 
     render() {
         return (
@@ -80,7 +85,7 @@ class Dashboard extends Component {
                                                 summary={this.state.summary}
                                                 showStats={this.showStats}
                                                 placeSelected={this.state.placeSelected}
-                                                handleShow={this.handleShow.bind(this)}
+                                                handleShow={this.handleShow}
                                                 current={
                                                     Object.values(this.state.option).length ?
                                                         this.state.option :
@@ -150,6 +155,7 @@ class Dashboard extends Component {
                                         </Col>
                                         <Col sm={12} lg={6}>
                                             <WorldTable
+                                                handleShow={this.handleShow.bind(this)}
                                                 handleChange={this.handleChange.bind(this)}
                                                 mode={this.state.mode}
                                                 worldData={this.state.world}
