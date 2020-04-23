@@ -40,6 +40,7 @@ class Header extends Component {
                         <img src={`https://www.countryflags.io/${flags[this.state.current.country]}/flat/${window.screen.width > window.screen.height ? "64" : "32"}.png`} alt="" /> :
                         null
                 }
+
             </Navbar>
 
         )
