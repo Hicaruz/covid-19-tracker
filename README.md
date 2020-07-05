@@ -1,1 +1,1 @@
-## Covid-19 Tracker --disabled
+## Covid-19 Tracker 
