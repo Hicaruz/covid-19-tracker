@@ -22,8 +22,8 @@ function mergeTimeLine(location, timeline = {}, type = "recovered") {
 async function setup() {
     const mode = { mode: "cors" }
     const [_timeline, _recovered] = await Promise.all([
-        fetch("https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", mode),
-        fetch('https://covid2019-api.herokuapp.com/timeseries/recovered', mode)
+        fetch("https://cors-anywhere.herokuapp.com/https://coronavirus-tracker-api.herokuapp.com/v2/locations?timelines=1", mode),
+        fetch('https://cors-anywhere.herokuapp.com/https://covid2019-api.herokuapp.com/timeseries/recovered', mode)
     ])
 
     const [timeline, { recovered }] = await Promise.all([_timeline.json(), _recovered.json()])
